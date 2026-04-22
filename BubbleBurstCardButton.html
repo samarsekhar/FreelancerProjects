@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bubble Burst Card</title>
+<!-- <link rel="stylesheet" href="style.css"> -->
+  <style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #5f9cff, #a855f7);
+    font-family: Arial, sans-serif;
+}
+
+/* Large Card */
+.card {
+    position: relative;
+    width: 420px;
+    padding: 40px;
+    border-radius: 20px;
+    background: white;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+.card p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 25px;
+}
+
+/* Button inside card */
+.action-btn {
+    padding: 14px 32px;
+    font-size: 18px;
+    border: none;
+    border-radius: 40px;
+    background: #ff4b5c;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.action-btn:active {
+    transform: scale(0.95);
+}
+
+/* Bubble */
+.bubble {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: burst 800ms ease-out forwards;
+}
+
+@keyframes burst {
+    0% {
+        transform: translate(0,0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--x), var(--y)) scale(0);
+        opacity: 0;
+    }
+}
+  </style>
+</head>
+<body>
+
+<div class="card" id="burstCard">
+
+    <h2>Bubble Burst Card</h2>
+    <p>
+        Click this large card to trigger a beautiful
+        bubble burst animation effect.
+    </p>
+
+    <button class="action-btn">
+        Click to Burst
+    </button>
+
+</div>
+
+<!-- <script src="script.js"></script> -->
+  <script>
+    const card = document.getElementById("burstCard");
+
+card.addEventListener("click", function (e) {
+
+    const rect = card.getBoundingClientRect();
+
+    // Create many bubbles
+    for (let i = 0; i < 40; i++) {
+
+        const bubble = document.createElement("span");
+        bubble.classList.add("bubble");
+
+        // Random colors
+        const colors = [
+            "#ff4b5c",
+            "#ff9f43",
+            "#1dd1a1",
+            "#54a0ff",
+            "#f368e0"
+        ];
+
+        bubble.style.background =
+            colors[Math.floor(Math.random() * colors.length)];
+
+        // Random movement
+        const x = (Math.random() - 0.5) * 350 + "px";
+        const y = (Math.random() - 0.5) * 350 + "px";
+
+        bubble.style.setProperty("--x", x);
+        bubble.style.setProperty("--y", y);
+
+        // Start position
+        bubble.style.left =
+            e.clientX - rect.left + "px";
+
+        bubble.style.top =
+            e.clientY - rect.top + "px";
+
+        card.appendChild(bubble);
+
+        setTimeout(() => {
+            bubble.remove();
+        }, 800);
+    }
+
+});
+  </script>
+</body>
+</html>
