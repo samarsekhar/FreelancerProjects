@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-Do List</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #faf7f2;
+    --paper: #f5f0e8;
+    --ink: #2d2418;
+    --rust: #c0392b;
+    --sage: #7a9e7e;
+    --warm: #d4a853;
+    --border: #d8ccb8;
+    --muted: #9b8f7a;
+  }
+  body {
+    background: var(--cream);
+    background-image:
+      repeating-linear-gradient(transparent, transparent 27px, rgba(0,0,0,0.04) 27px, rgba(0,0,0,0.04) 28px);
+    background-size: 100% 28px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 3rem 1rem;
+    font-family: 'Lato', sans-serif;
+  }
+  .notebook {
+    width: 100%;
+    max-width: 520px;
+    position: relative;
+  }
+  .notebook::before {
+    content: '';
+    position: absolute;
+    left: 52px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(192,57,43,0.25);
+  }
+  .header {
+    padding-left: 68px;
+    margin-bottom: 2rem;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 7vw, 3rem);
+    color: var(--ink);
+    line-height: 1;
+  }
+  .header h1 em { color: var(--rust); font-style: italic; }
+  .header p { color: var(--muted); font-size: 0.85rem; margin-top: 0.3rem; font-weight: 300; }
+
+  .add-row {
+    display: flex;
+    gap: 0;
+    padding-left: 68px;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .add-row input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--border);
+    color: var(--ink);
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    padding: 0.5rem 0;
+    outline: none;
+    font-weight: 300;
+    transition: border 0.2s;
+  }
+  .add-row input::placeholder { color: var(--muted); }
+  .add-row input:focus { border-color: var(--warm); }
+  .add-row button {
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.8rem;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    align-self: flex-end;
+    margin-bottom: 2px;
+  }
+  .add-row button:hover { background: var(--rust); transform: scale(1.1); }
+
+  .filter-tabs {
+    display: flex;
+    gap: 1.5rem;
+    padding-left: 68px;
+    margin-bottom: 1.5rem;
+  }
+  .filter-tab {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Lato', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .filter-tab.active { color: var(--ink); border-color: var(--warm); }
+
+  .task-list { list-style: none; }
+
+  .task {
+    display: flex;
+    align-items: flex-start;
+    padding: 0.6rem 0;
+    padding-left: 68px;
+    gap: 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    animation: appear 0.25s ease;
+    position: relative;
+    group: true;
+  }
+  @keyframes appear { from { opacity: 0; transform: translateX(-6px); } }
+
+  .task-num {
+    position: absolute;
+    left: 16px;
+    top: 0.75rem;
+    width: 30px;
+    text-align: right;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .checkbox {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 2px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    background: transparent;
+  }
+  .checkbox:hover { border-color: var(--sage); }
+  .checkbox.checked { background: var(--sage); border-color: var(--sage); }
+  .checkbox.checked::after { content: '✓'; color: #fff; font-size: 0.7rem; }
+
+  .task-text {
+    flex: 1;
+    color: var(--ink);
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.5;
+    cursor: text;
+    outline: none;
+  }
+  .task-text.done { text-decoration: line-through; color: var(--muted); }
+
+  .task-del {
+    background: none;
+    border: none;
+    color: transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0;
+    transition: color 0.15s;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .task:hover .task-del { color: var(--rust); }
+
+  .footer {
+    padding-left: 68px;
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer span { font-size: 0.8rem; color: var(--muted); font-weight: 300; }
+  .clear-done {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Lato', sans-serif;
+    font-size: 0.75rem;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: underline;
+  }
+  .clear-done:hover { color: var(--rust); }
+  .empty { padding-left: 68px; color: var(--muted); font-family: 'Playfair Display', serif; font-style: italic; font-size: 1rem; margin-top: 1rem; }
+</style>
+</head>
+<body>
+<div class="notebook">
+  <div class="header">
+    <h1>My <em>Tasks</em></h1>
+    <p id="todayDate"></p>
+  </div>
+
+  <div class="add-row">
+    <input type="text" id="taskInput" placeholder="Write a new task…"/>
+    <button onclick="addTask()">+</button>
+  </div>
+
+  <div class="filter-tabs">
+    <button class="filter-tab active" onclick="setFilter('all',this)">All</button>
+    <button class="filter-tab" onclick="setFilter('active',this)">Active</button>
+    <button class="filter-tab" onclick="setFilter('done',this)">Done</button>
+  </div>
+
+  <ul class="task-list" id="taskList"></ul>
+  <div class="empty" id="emptyMsg" style="display:none">Nothing here yet…</div>
+
+  <div class="footer">
+    <span id="leftCount">0 tasks left</span>
+    <button class="clear-done" onclick="clearDone()">Clear completed</button>
+  </div>
+</div>
+
+<script>
+  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+
+  let tasks = JSON.parse(localStorage.getItem('todo-tasks') || '[]');
+  let filter = 'all';
+
+  function save() { localStorage.setItem('todo-tasks', JSON.stringify(tasks)); }
+
+  function setFilter(f, btn) {
+    filter = f;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  }
+
+  function render() {
+    const list = document.getElementById('taskList');
+    const visible = tasks.filter(t => filter === 'all' ? true : filter === 'active' ? !t.done : t.done);
+    document.getElementById('emptyMsg').style.display = visible.length ? 'none' : 'block';
+    const left = tasks.filter(t => !t.done).length;
+    document.getElementById('leftCount').textContent = `${left} task${left !== 1 ? 's' : ''} left`;
+    list.innerHTML = visible.map((t, i) => `
+      <li class="task" data-id="${t.id}">
+        <span class="task-num">${tasks.indexOf(t) + 1}.</span>
+        <div class="checkbox${t.done ? ' checked' : ''}" onclick="toggle(${t.id})"></div>
+        <span class="task-text${t.done ? ' done' : ''}" contenteditable="true" onblur="editTask(${t.id}, this.textContent)">${t.text}</span>
+        <button class="task-del" onclick="deleteTask(${t.id})">✕</button>
+      </li>`).join('');
+  }
+
+  function addTask() {
+    const val = document.getElementById('taskInput').value.trim();
+    if (!val) return;
+    tasks.push({ id: Date.now(), text: val, done: false });
+    document.getElementById('taskInput').value = '';
+    save(); render();
+  }
+
+  function toggle(id) {
+    tasks = tasks.map(t => t.id === id ? { ...t, done: !t.done } : t);
+    save(); render();
+  }
+
+  function deleteTask(id) {
+    tasks = tasks.filter(t => t.id !== id);
+    save(); render();
+  }
+
+  function editTask(id, text) {
+    tasks = tasks.map(t => t.id === id ? { ...t, text: text.trim() || t.text } : t);
+    save();
+  }
+
+  function clearDone() { tasks = tasks.filter(t => !t.done); save(); render(); }
+
+  document.getElementById('taskInput').addEventListener('keydown', e => { if (e.key === 'Enter') addTask(); });
+
+  // Seed some tasks if empty
+  if (!tasks.length) {
+    ['Design the homepage layout','Review pull requests','Buy groceries','Call the dentist'].forEach((t,i) =>
+      tasks.push({id:i+1,text:t,done:i===1}));
+    save();
+  }
+  render();
+</script>
+</body>
+</html>
