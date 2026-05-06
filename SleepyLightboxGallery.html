@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sleepy Lightbox Gallery</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: sans-serif;
+    background: #0f172a;
+    color: white;
+  }
+
+  /* Gallery Grid */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 20px;
+  }
+
+  .gallery img {
+    width: 100%;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.4s ease, filter 0.4s ease;
+  }
+
+  .gallery img:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+  }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+
+  .lightbox.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .lightbox img {
+    max-width: 90%;
+    max-height: 80%;
+    border-radius: 16px;
+    transform: scale(0.8);
+    transition: transform 0.5s ease;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+
+  .lightbox.active img {
+    transform: scale(1);
+  }
+
+  /* Controls */
+  .controls {
+    position: absolute;
+    bottom: 30px;
+    display: flex;
+    gap: 20px;
+  }
+
+  .btn {
+    background: rgba(255,255,255,0.1);
+    padding: 10px 14px;
+    border-radius: 50%;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: background 0.3s;
+  }
+
+  .btn:hover {
+    background: rgba(255,255,255,0.3);
+  }
+</style>
+</head>
+
+<body>
+
+<h2 style="text-align:center; padding-top:20px;">🌙 Sleepy Lightbox Gallery</h2>
+
+<div class="gallery">
+  <img src="https://picsum.photos/id/1015/400/300" />
+  <img src="https://picsum.photos/id/1016/400/300" />
+  <img src="https://picsum.photos/id/1018/400/300" />
+  <img src="https://picsum.photos/id/1020/400/300" />
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img" src="" />
+  
+  <div class="controls">
+    <div class="btn" id="prev">⟨</div>
+    <div class="btn" id="next">⟩</div>
+    <div class="btn" id="close">✕</div>
+  </div>
+</div>
+
+<script>
+  const images = document.querySelectorAll(".gallery img");
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img");
+
+  const prevBtn = document.getElementById("prev");
+  const nextBtn = document.getElementById("next");
+  const closeBtn = document.getElementById("close");
+
+  let currentIndex = 0;
+
+  function showImage(index) {
+    currentIndex = index;
+    lightboxImg.src = images[index].src;
+    lightbox.classList.add("active");
+  }
+
+  images.forEach((img, index) => {
+    img.addEventListener("click", () => showImage(index));
+  });
+
+  function nextImage() {
+    currentIndex = (currentIndex + 1) % images.length;
+    showImage(currentIndex);
+  }
+
+  function prevImage() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    showImage(currentIndex);
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove("active");
+  }
+
+  nextBtn.onclick = nextImage;
+  prevBtn.onclick = prevImage;
+  closeBtn.onclick = closeLightbox;
+
+  // Click outside to close
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  // Keyboard controls
+  document.addEventListener("keydown", (e) => {
+    if (!lightbox.classList.contains("active")) return;
+
+    if (e.key === "ArrowRight") nextImage();
+    if (e.key === "ArrowLeft") prevImage();
+    if (e.key === "Escape") closeLightbox();
+  });
+</script>
+
+</body>
+</html>
