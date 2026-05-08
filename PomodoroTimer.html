@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pomodoro Timer</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111;
+    --accent: #ff3b3b;
+    --accent2: #ff8c42;
+    --text: #f0ede8;
+    --muted: #555;
+    --ring-size: min(72vw, 340px);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, #1a0505 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .grain {
+    position: fixed;
+    inset: 0;
+    opacity: 0.04;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .tab {
+    background: none;
+    border: 1px solid var(--muted);
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .tab.active, .tab:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .ring-wrap {
+    position: relative;
+    width: var(--ring-size);
+    height: var(--ring-size);
+    margin-bottom: 2.5rem;
+  }
+
+  svg.ring {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  .ring-bg { fill: none; stroke: #1f1f1f; stroke-width: 8; }
+  .ring-prog {
+    fill: none;
+    stroke: url(#grad);
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s linear;
+  }
+
+  .ring-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+  }
+
+  .time-display {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 18vw, 6.5rem);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: var(--text);
+  }
+
+  .session-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s;
+    color: var(--muted);
+    font-size: 1.3rem;
+    padding: 0.5rem;
+  }
+
+  .btn:hover { color: var(--text); transform: scale(1.1); }
+
+  .btn-main {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 1.5rem;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 0 30px #ff3b3b55;
+  }
+
+  .btn-main:hover { transform: scale(1.08); box-shadow: 0 0 40px #ff3b3b88; }
+
+  .sessions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    transition: background 0.3s;
+  }
+
+  .dot.done { background: var(--accent2); }
+
+  @media (max-width: 400px) {
+    .tabs { flex-wrap: wrap; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<h1>Focus Timer</h1>
+
+<div class="tabs">
+  <button class="tab active" data-mode="pomodoro" data-mins="25">Pomodoro</button>
+  <button class="tab" data-mode="short" data-mins="5">Short Break</button>
+  <button class="tab" data-mode="long" data-mins="15">Long Break</button>
+</div>
+
+<div class="ring-wrap">
+  <svg class="ring" viewBox="0 0 100 100">
+    <defs>
+      <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#ff3b3b"/>
+        <stop offset="100%" style="stop-color:#ff8c42"/>
+      </linearGradient>
+    </defs>
+    <circle class="ring-bg" cx="50" cy="50" r="44"/>
+    <circle class="ring-prog" id="prog" cx="50" cy="50" r="44"/>
+  </svg>
+  <div class="ring-center">
+    <div class="time-display" id="display">25:00</div>
+    <div class="session-label" id="slabel">Focus Session</div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="btn" id="resetBtn" title="Reset">&#8635;</button>
+  <button class="btn-main" id="startBtn">&#9654;</button>
+  <button class="btn" id="skipBtn" title="Skip">&#9197;</button>
+</div>
+
+<div class="sessions" id="sessions"></div>
+
+<script>
+  const C = 2 * Math.PI * 44;
+  const prog = document.getElementById('prog');
+  const display = document.getElementById('display');
+  const slabel = document.getElementById('slabel');
+  const startBtn = document.getElementById('startBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const skipBtn = document.getElementById('skipBtn');
+  const sessionsEl = document.getElementById('sessions');
+
+  prog.style.strokeDasharray = C;
+
+  let totalSecs = 25 * 60, remaining = totalSecs, running = false, interval = null;
+  let completedSessions = 0;
+  const labels = { pomodoro: 'Focus Session', short: 'Short Break', long: 'Long Break' };
+  let currentMode = 'pomodoro';
+
+  function buildDots() {
+    sessionsEl.innerHTML = '';
+    for (let i = 0; i < 4; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i < completedSessions ? ' done' : '');
+      sessionsEl.appendChild(d);
+    }
+  }
+  buildDots();
+
+  function fmt(s) {
+    const m = Math.floor(s / 60).toString().padStart(2, '0');
+    const ss = (s % 60).toString().padStart(2, '0');
+    return `${m}:${ss}`;
+  }
+
+  function updateRing() {
+    const pct = remaining / totalSecs;
+    prog.style.strokeDashoffset = C * (1 - pct);
+    display.textContent = fmt(remaining);
+  }
+
+  function setMode(mode, mins) {
+    clearInterval(interval);
+    running = false;
+    startBtn.innerHTML = '&#9654;';
+    currentMode = mode;
+    totalSecs = mins * 60;
+    remaining = totalSecs;
+    slabel.textContent = labels[mode];
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+    updateRing();
+  }
+
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => setMode(t.dataset.mode, +t.dataset.mins));
+  });
+
+  startBtn.addEventListener('click', () => {
+    running = !running;
+    startBtn.innerHTML = running ? '&#9646;&#9646;' : '&#9654;';
+    if (running) {
+      interval = setInterval(() => {
+        if (remaining <= 0) {
+          clearInterval(interval);
+          running = false;
+          startBtn.innerHTML = '&#9654;';
+          if (currentMode === 'pomodoro') { completedSessions = (completedSessions + 1) % 5; buildDots(); }
+          return;
+        }
+        remaining--;
+        updateRing();
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+  });
+
+  resetBtn.addEventListener('click', () => setMode(currentMode, totalSecs / 60));
+  skipBtn.addEventListener('click', () => {
+    clearInterval(interval); running = false;
+    startBtn.innerHTML = '&#9654;';
+    remaining = 0; updateRing();
+  });
+
+  updateRing();
+</script>
+</body>
+</html>
