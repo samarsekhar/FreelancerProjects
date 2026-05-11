@@ -1,0 +1,213 @@
+<!-- Build Responsive Navbar with Tailwind Fast -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Professional Responsive Navbar</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Remix Icon -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    html{
+      scroll-behavior: smooth;
+    }
+
+    .glass{
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+  </style>
+</head>
+
+<body class="bg-[#0f172a] text-white font-sans">
+
+  <!-- Navbar -->
+  <header class="fixed top-0 left-0 w-full z-50">
+    
+    <nav class="glass shadow-2xl">
+      <div class="max-w-7xl mx-auto px-6 lg:px-10">
+
+        <div class="flex items-center justify-between h-20">
+
+          <!-- Logo -->
+          <a href="#" class="flex items-center gap-3">
+
+            <div class="w-11 h-11 rounded-xl bg-cyan-500 flex items-center justify-center text-black font-bold text-xl shadow-lg shadow-cyan-500/40">
+              C
+            </div>
+
+            <div>
+              <h1 class="text-2xl font-bold tracking-wide">
+                CodeSam
+              </h1>
+
+              <p class="text-xs text-gray-400 -mt-1">
+                Modern UI
+              </p>
+            </div>
+          </a>
+
+          <!-- Desktop Menu -->
+          <div class="hidden md:flex items-center gap-8">
+
+            <a href="#" class="hover:text-cyan-400 transition duration-300">
+              Home
+            </a>
+
+            <a href="#" class="hover:text-cyan-400 transition duration-300">
+              Features
+            </a>
+
+            <a href="#" class="hover:text-cyan-400 transition duration-300">
+              Services
+            </a>
+
+            <a href="#" class="hover:text-cyan-400 transition duration-300">
+              Pricing
+            </a>
+
+            <a href="#" class="hover:text-cyan-400 transition duration-300">
+              Contact
+            </a>
+
+          </div>
+
+          <!-- Right Side -->
+          <div class="hidden md:flex items-center gap-4">
+
+            <button class="px-5 py-2 rounded-xl border border-gray-700 hover:border-cyan-400 hover:text-cyan-400 transition">
+              Login
+            </button>
+
+            <button class="px-5 py-2 rounded-xl bg-cyan-500 text-black font-semibold hover:bg-cyan-400 transition shadow-lg shadow-cyan-500/30">
+              Get Started
+            </button>
+
+          </div>
+
+          <!-- Mobile Menu Button -->
+          <button
+            id="menu-btn"
+            class="md:hidden text-3xl text-white"
+          >
+            <i class="ri-menu-3-line"></i>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div
+        id="mobile-menu"
+        class="hidden md:hidden border-t border-gray-800 bg-[#111827]"
+      >
+
+        <div class="flex flex-col px-6 py-5 space-y-5">
+
+          <a href="#" class="hover:text-cyan-400 transition">
+            Home
+          </a>
+
+          <a href="#" class="hover:text-cyan-400 transition">
+            Features
+          </a>
+
+          <a href="#" class="hover:text-cyan-400 transition">
+            Services
+          </a>
+
+          <a href="#" class="hover:text-cyan-400 transition">
+            Pricing
+          </a>
+
+          <a href="#" class="hover:text-cyan-400 transition">
+            Contact
+          </a>
+
+          <div class="flex flex-col gap-3 pt-3">
+
+            <button class="w-full py-3 rounded-xl border border-gray-700 hover:border-cyan-400 transition">
+              Login
+            </button>
+
+            <button class="w-full py-3 rounded-xl bg-cyan-500 text-black font-semibold hover:bg-cyan-400 transition">
+              Get Started
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="min-h-screen flex items-center justify-center px-6">
+
+    <div class="text-center max-w-3xl">
+
+      <p class="text-cyan-400 font-semibold mb-4 tracking-widest uppercase">
+        Professional Navbar Design
+      </p>
+
+      <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6">
+        Build Modern
+        <span class="text-cyan-400">
+          Responsive UI
+        </span>
+      </h1>
+
+      <p class="text-gray-400 text-lg md:text-xl leading-relaxed mb-10">
+        Fast, elegant, mobile-friendly navigation design using
+        Tailwind CSS with smooth interactions and clean layout.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-5">
+
+        <button class="px-8 py-4 rounded-2xl bg-cyan-500 text-black font-bold hover:bg-cyan-400 transition shadow-xl shadow-cyan-500/30">
+          Explore Now
+        </button>
+
+        <button class="px-8 py-4 rounded-2xl border border-gray-700 hover:border-cyan-400 hover:text-cyan-400 transition">
+          Live Demo
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- JavaScript -->
+  <script>
+    const menuBtn = document.getElementById("menu-btn");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const menuIcon = menuBtn.querySelector("i");
+
+    menuBtn.addEventListener("click", () => {
+
+      mobileMenu.classList.toggle("hidden");
+
+      if (mobileMenu.classList.contains("hidden")) {
+        menuIcon.classList.remove("ri-close-line");
+        menuIcon.classList.add("ri-menu-3-line");
+      } else {
+        menuIcon.classList.remove("ri-menu-3-line");
+        menuIcon.classList.add("ri-close-line");
+      }
+
+    });
+  </script>
+
+</body>
+</html>
