@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fibonacci Series Generator</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 min-h-screen flex items-center justify-center p-5">
+
+  <div class="w-full max-w-2xl bg-slate-800/90 backdrop-blur-lg border border-slate-700 rounded-3xl shadow-2xl p-8">
+
+    <!-- Title -->
+    <h1 class="text-4xl font-bold text-center text-white mb-2">
+      Fibonacci Generator
+    </h1>
+
+    <p class="text-center text-slate-400 mb-8">
+      Generate Fibonacci series with history tracking
+    </p>
+
+    <!-- Input -->
+    <div class="flex flex-col md:flex-row gap-4">
+
+      <input
+        type="number"
+        id="numberInput"
+        placeholder="Enter a number..."
+        class="flex-1 px-5 py-4 rounded-2xl bg-slate-700 text-white border border-slate-600 outline-none focus:ring-2 focus:ring-cyan-400"
+      />
+
+      <!-- Generate Button -->
+      <button
+        onclick="generateFibonacci()"
+        class="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-4 rounded-2xl font-semibold transition duration-300"
+      >
+        Generate
+      </button>
+
+      <!-- Reset Button -->
+      <button
+        onclick="resetAll()"
+        class="bg-rose-500 hover:bg-rose-600 text-white px-6 py-4 rounded-2xl font-semibold transition duration-300"
+      >
+        Reset
+      </button>
+
+    </div>
+
+    <!-- Result -->
+    <div class="mt-8">
+
+      <h2 class="text-2xl font-semibold text-white mb-3">
+        Result
+      </h2>
+
+      <div
+        id="result"
+        class="bg-slate-700 border border-slate-600 rounded-2xl p-5 text-cyan-300 min-h-[80px] break-words"
+      >
+        Fibonacci series will appear here...
+      </div>
+
+    </div>
+
+    <!-- History -->
+    <div class="mt-8">
+
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-semibold text-white">
+          History
+        </h2>
+
+        <button
+          onclick="clearHistory()"
+          class="text-sm bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl transition"
+        >
+          Clear History
+        </button>
+      </div>
+
+      <div
+        id="history"
+        class="space-y-3 max-h-72 overflow-y-auto"
+      >
+        <!-- History Items -->
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    let historyList = [];
+
+    function fibonacci(n) {
+      let series = [0, 1];
+
+      if (n === 1) return [0];
+      if (n === 2) return series;
+
+      for (let i = 2; i < n; i++) {
+        series.push(series[i - 1] + series[i - 2]);
+      }
+
+      return series;
+    }
+
+    function generateFibonacci() {
+      const number = parseInt(document.getElementById("numberInput").value);
+      const resultBox = document.getElementById("result");
+
+      if (isNaN(number) || number <= 0) {
+        resultBox.innerHTML =
+          "<span class='text-rose-400'>Please enter a valid positive number.</span>";
+        return;
+      }
+
+      const result = fibonacci(number);
+
+      // Show Result
+      resultBox.innerHTML = result.join(", ");
+
+      // Add to History
+      historyList.unshift({
+        number,
+        result: result.join(", ")
+      });
+
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const historyContainer = document.getElementById("history");
+
+      if (historyList.length === 0) {
+        historyContainer.innerHTML = `
+          <div class="text-slate-400 bg-slate-700 p-4 rounded-xl">
+            No history available.
+          </div>
+        `;
+        return;
+      }
+
+      historyContainer.innerHTML = historyList
+        .map(
+          (item, index) => `
+          <div class="bg-slate-700 border border-slate-600 p-4 rounded-2xl">
+            <p class="text-cyan-400 font-semibold mb-2">
+              #${index + 1} - Input: ${item.number}
+            </p>
+
+            <p class="text-slate-300 break-words">
+              ${item.result}
+            </p>
+          </div>
+        `
+        )
+        .join("");
+    }
+
+    function resetAll() {
+      document.getElementById("numberInput").value = "";
+      document.getElementById("result").innerHTML =
+        "Fibonacci series will appear here...";
+    }
+
+    function clearHistory() {
+      historyList = [];
+      renderHistory();
+    }
+
+    // Initial History Render
+    renderHistory();
+  </script>
+
+</body>
+</html>
