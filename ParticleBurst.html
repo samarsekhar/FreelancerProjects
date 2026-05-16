@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>04 · Particle Burst</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;1,300&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: #fff8f0; font-family: 'Fraunces', serif;
+    overflow: hidden; cursor: crosshair;
+  }
+  canvas { position: fixed; inset: 0; pointer-events: none; }
+  .center {
+    text-align: center; pointer-events: none;
+    user-select: none;
+  }
+  h1 { font-size: clamp(40px, 8vw, 80px); font-weight: 300; color: #1a1a1a; line-height: 1; }
+  h1 em { font-style: italic; color: #e05a2b; }
+  p { font-size: 12px; letter-spacing: .2em; color: #bbb; text-transform: uppercase; margin-top: 20px; font-style: normal; font-family: monospace; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="center">
+  <h1>Click<br><em>anywhere</em></h1>
+  <p>04 · Particle Burst</p>
+</div>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width = innerWidth; canvas.height = innerHeight;
+window.addEventListener('resize', () => { canvas.width = innerWidth; canvas.height = innerHeight; });
+
+const palette = ['#e05a2b','#f4a261','#2a9d8f','#e9c46a','#264653','#e76f51'];
+let particles = [];
+
+class Particle {
+  constructor(x, y) {
+    this.x = x; this.y = y;
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 8 + 2;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed - 2;
+    this.radius = Math.random() * 6 + 2;
+    this.color = palette[Math.floor(Math.random() * palette.length)];
+    this.alpha = 1;
+    this.gravity = .15;
+    this.shape = Math.random() > .5 ? 'circle' : 'square';
+  }
+  update() {
+    this.vy += this.gravity;
+    this.x += this.vx; this.y += this.vy;
+    this.alpha -= .018;
+  }
+  draw() {
+    ctx.globalAlpha = Math.max(0, this.alpha);
+    ctx.fillStyle = this.color;
+    if (this.shape === 'circle') {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.fillRect(this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2);
+    }
+  }
+}
+
+document.addEventListener('click', e => {
+  for (let i = 0; i < 60; i++) particles.push(new Particle(e.clientX, e.clientY));
+});
+
+function loop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles = particles.filter(p => p.alpha > 0);
+  particles.forEach(p => { p.update(); p.draw(); });
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
