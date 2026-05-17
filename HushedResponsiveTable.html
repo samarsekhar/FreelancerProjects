@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hushed Table</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"DM Serif Display"', 'serif'],
+            mono:  ['"DM Mono"', 'monospace'],
+            sans:  ['Lato', 'sans-serif'],
+          },
+          colors: {
+            stone: {
+              25: '#FAFAF9',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Lato', sans-serif; }
+    .progress-fill { transition: width 0.4s cubic-bezier(.4,0,.2,1); }
+    tbody tr { transition: background 0.12s; }
+    th { transition: color 0.12s; }
+    .chip { transition: all 0.15s; }
+    .sort-icon { transition: opacity 0.15s; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .row-anim { animation: fadeIn 0.25s ease both; }
+  </style>
+</head>
+<body class="min-h-screen bg-stone-50 text-stone-800 antialiased">
+
+  <!-- Page shell -->
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+      <div>
+        <h1 class="font-serif text-3xl font-normal text-stone-900 leading-tight">Team overview</h1>
+        <p class="text-sm text-stone-400 mt-1 font-light">Q2 2026 &middot; 8 members</p>
+      </div>
+
+      <!-- Controls -->
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Search -->
+        <label class="flex items-center gap-2 bg-white border border-stone-200 rounded-lg px-3 py-2 shadow-sm focus-within:ring-1 focus-within:ring-teal-400 focus-within:border-teal-400">
+          <svg class="w-4 h-4 text-stone-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input id="searchInput" type="text" placeholder="Search…"
+            class="bg-transparent outline-none text-sm text-stone-700 placeholder:text-stone-300 w-36"
+            oninput="filterTable()" />
+        </label>
+
+        <!-- Filter chips -->
+        <div id="filterChips" class="flex gap-1">
+          <button class="chip px-3 py-1.5 text-xs rounded-full border border-teal-500 bg-teal-50 text-teal-700 font-medium" onclick="setFilter('all',this)">All</button>
+          <button class="chip px-3 py-1.5 text-xs rounded-full border border-stone-200 text-stone-500 hover:border-teal-400 hover:text-teal-600" onclick="setFilter('active',this)">Active</button>
+          <button class="chip px-3 py-1.5 text-xs rounded-full border border-stone-200 text-stone-500 hover:border-teal-400 hover:text-teal-600" onclick="setFilter('review',this)">In review</button>
+          <button class="chip px-3 py-1.5 text-xs rounded-full border border-stone-200 text-stone-500 hover:border-teal-400 hover:text-teal-600" onclick="setFilter('away',this)">Away</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table card -->
+    <div class="bg-white rounded-2xl border border-stone-100 shadow-sm overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-stone-25 border-b border-stone-100">
+              <th class="px-5 py-3 text-left" onclick="sortTable(0)" id="th0">
+                <span class="flex items-center gap-1 uppercase tracking-widest text-[10px] font-semibold text-stone-400 hover:text-stone-600 cursor-pointer select-none">
+                  Member <span class="sort-icon opacity-40" id="si0">↕</span>
+                </span>
+              </th>
+              <th class="px-5 py-3 text-left hidden sm:table-cell" onclick="sortTable(1)" id="th1">
+                <span class="flex items-center gap-1 uppercase tracking-widest text-[10px] font-semibold text-stone-400 hover:text-stone-600 cursor-pointer select-none">
+                  Dept <span class="sort-icon opacity-40" id="si1">↕</span>
+                </span>
+              </th>
+              <th class="px-5 py-3 text-left" onclick="sortTable(2)" id="th2">
+                <span class="flex items-center gap-1 uppercase tracking-widest text-[10px] font-semibold text-stone-400 hover:text-stone-600 cursor-pointer select-none">
+                  Status <span class="sort-icon opacity-40" id="si2">↕</span>
+                </span>
+              </th>
+              <th class="px-5 py-3 text-left hidden md:table-cell" onclick="sortTable(3)" id="th3">
+                <span class="flex items-center gap-1 uppercase tracking-widest text-[10px] font-semibold text-stone-400 hover:text-stone-600 cursor-pointer select-none">
+                  Tasks <span class="sort-icon opacity-40" id="si3">↕</span>
+                </span>
+              </th>
+              <th class="px-5 py-3 text-left" onclick="sortTable(4)" id="th4">
+                <span class="flex items-center gap-1 uppercase tracking-widest text-[10px] font-semibold text-stone-400 hover:text-stone-600 cursor-pointer select-none">
+                  Progress <span class="sort-icon opacity-40" id="si4">↕</span>
+                </span>
+              </th>
+              <th class="px-5 py-3 text-left hidden lg:table-cell" onclick="sortTable(5)" id="th5">
+                <span class="flex items-center gap-1 uppercase tracking-widest text-[10px] font-semibold text-stone-400 hover:text-stone-600 cursor-pointer select-none">
+                  Joined <span class="sort-icon opacity-40" id="si5">↕</span>
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Footer -->
+      <div class="flex items-center justify-between px-5 py-3 border-t border-stone-100 bg-stone-25">
+        <p class="text-xs text-stone-400 font-light" id="rowCount">Showing 8 of 8</p>
+        <div class="flex gap-1">
+          <button class="w-7 h-7 rounded-md border border-teal-400 bg-teal-50 text-teal-700 text-xs font-medium flex items-center justify-center">1</button>
+          <button class="w-7 h-7 rounded-md border border-stone-200 text-stone-400 text-xs hover:bg-stone-50 flex items-center justify-center">2</button>
+          <button class="w-7 h-7 rounded-md border border-stone-200 text-stone-400 text-xs hover:bg-stone-50 flex items-center justify-center">›</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /max-w -->
+
+<script>
+const data = [
+  { name:'Arjun Mehta',    role:'Lead Designer',   av:'AM', avc:'bg-teal-100 text-teal-700',   dept:'Design',       status:'active', tasks:14, progress:82, joined:'Jan 2024' },
+  { name:'Lucia Ferreira', role:'Frontend Eng',    av:'LF', avc:'bg-violet-100 text-violet-700',dept:'Engineering', status:'active', tasks:22, progress:67, joined:'Mar 2023' },
+  { name:'Noah Osei',      role:'Data Analyst',    av:'NO', avc:'bg-rose-100 text-rose-700',    dept:'Analytics',   status:'review', tasks:9,  progress:45, joined:'Jul 2024' },
+  { name:'Priya Rajan',    role:'Product Mgr',     av:'PR', avc:'bg-blue-100 text-blue-700',    dept:'Product',     status:'active', tasks:31, progress:91, joined:'Sep 2022' },
+  { name:'Tom Baxter',     role:'DevOps Eng',      av:'TB', avc:'bg-amber-100 text-amber-700',  dept:'Engineering', status:'away',   tasks:6,  progress:33, joined:'Feb 2025' },
+  { name:'Yuna Park',      role:'UX Researcher',   av:'YP', avc:'bg-teal-100 text-teal-700',    dept:'Design',      status:'active', tasks:11, progress:74, joined:'Nov 2023' },
+  { name:'Carlos Vega',    role:'Backend Eng',     av:'CV', avc:'bg-violet-100 text-violet-700',dept:'Engineering', status:'review', tasks:18, progress:55, joined:'Apr 2024' },
+  { name:'Sienna Blake',   role:'Scrum Master',    av:'SB', avc:'bg-rose-100 text-rose-700',    dept:'Product',     status:'active', tasks:25, progress:88, joined:'Jun 2022' },
+];
+
+const statusCfg = {
+  active: { dot:'bg-emerald-400', label:'Active',    pill:'bg-emerald-50 text-emerald-700 border-emerald-200' },
+  review: { dot:'bg-amber-400',   label:'In review', pill:'bg-amber-50 text-amber-700 border-amber-200' },
+  away:   { dot:'bg-sky-400',     label:'Away',      pill:'bg-sky-50 text-sky-700 border-sky-200' },
+};
+
+const progressColor = p => p >= 75 ? 'bg-teal-500' : p >= 50 ? 'bg-amber-400' : 'bg-rose-400';
+
+let currentFilter = 'all', sortCol = -1, sortAsc = true;
+
+function render(rows) {
+  const tbody = document.getElementById('tableBody');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="px-5 py-12 text-center text-sm text-stone-400 font-light">No results found</td></tr>`;
+    document.getElementById('rowCount').textContent = 'Showing 0 of ' + data.length;
+    return;
+  }
+  tbody.innerHTML = rows.map((r, i) => {
+    const s = statusCfg[r.status];
+    return `
+    <tr class="row-anim border-b border-stone-50 hover:bg-stone-25 cursor-default" style="animation-delay:${i * 30}ms">
+      <td class="px-5 py-3.5">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full ${r.avc} flex items-center justify-center text-[11px] font-semibold shrink-0">${r.av}</div>
+          <div>
+            <p class="font-semibold text-stone-800 text-[13.5px] leading-tight">${r.name}</p>
+            <p class="text-[11.5px] text-stone-400 font-light">${r.role}</p>
+          </div>
+        </div>
+      </td>
+      <td class="px-5 py-3.5 hidden sm:table-cell">
+        <span class="font-mono text-xs text-stone-500">${r.dept}</span>
+      </td>
+      <td class="px-5 py-3.5">
+        <span class="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full border ${s.pill}">
+          <span class="w-1.5 h-1.5 rounded-full ${s.dot}"></span>${s.label}
+        </span>
+      </td>
+      <td class="px-5 py-3.5 hidden md:table-cell">
+        <span class="tabular-nums text-[13px] text-stone-700">${r.tasks}</span>
+      </td>
+      <td class="px-5 py-3.5">
+        <div class="flex items-center gap-2.5">
+          <div class="w-20 h-1 bg-stone-100 rounded-full overflow-hidden hidden sm:block">
+            <div class="h-full rounded-full progress-fill ${progressColor(r.progress)}" style="width:${r.progress}%"></div>
+          </div>
+          <span class="text-xs text-stone-400 tabular-nums font-mono">${r.progress}%</span>
+        </div>
+      </td>
+      <td class="px-5 py-3.5 hidden lg:table-cell">
+        <span class="font-mono text-xs text-stone-400">${r.joined}</span>
+      </td>
+    </tr>`;
+  }).join('');
+  document.getElementById('rowCount').textContent = `Showing ${rows.length} of ${data.length}`;
+}
+
+function getFiltered() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  return data.filter(r => {
+    const ok = currentFilter === 'all' || r.status === currentFilter;
+    const match = !q || r.name.toLowerCase().includes(q) || r.dept.toLowerCase().includes(q) || r.role.toLowerCase().includes(q);
+    return ok && match;
+  });
+}
+
+function filterTable() { render(getSorted(getFiltered())); }
+
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('#filterChips button').forEach(b => {
+    b.className = 'chip px-3 py-1.5 text-xs rounded-full border border-stone-200 text-stone-500 hover:border-teal-400 hover:text-teal-600';
+  });
+  el.className = 'chip px-3 py-1.5 text-xs rounded-full border border-teal-500 bg-teal-50 text-teal-700 font-medium';
+  filterTable();
+}
+
+function getSorted(rows) {
+  if (sortCol < 0) return rows;
+  const keys = ['name','dept','status','tasks','progress','joined'];
+  return [...rows].sort((a,b) => {
+    const va = a[keys[sortCol]], vb = b[keys[sortCol]];
+    if (typeof va === 'number') return sortAsc ? va - vb : vb - va;
+    return sortAsc ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+  });
+}
+
+function sortTable(col) {
+  if (sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = true; }
+  for (let i = 0; i <= 5; i++) {
+    const si = document.getElementById('si'+i);
+    if (!si) continue;
+    si.textContent = i === col ? (sortAsc ? '↑' : '↓') : '↕';
+    si.className = 'sort-icon ' + (i === col ? 'opacity-100 text-teal-500' : 'opacity-40');
+  }
+  render(getSorted(getFiltered()));
+}
+
+render(data);
+</script>
+</body>
+</html>
