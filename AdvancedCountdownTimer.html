@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advanced Countdown Timer</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-black min-h-screen flex items-center justify-center px-4">
+
+  <!-- Main Card -->
+  <div class="w-full max-w-2xl bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-8">
+
+    <!-- Title -->
+    <div class="text-center mb-8">
+      <h1 class="text-5xl font-bold text-white mb-2">
+        Countdown Timer
+      </h1>
+      <p class="text-gray-300">
+        Professional Timer with Hours & Progress Bar
+      </p>
+    </div>
+
+    <!-- Input Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+
+      <input
+        type="number"
+        id="hoursInput"
+        placeholder="Hours"
+        min="0"
+        class="bg-white/10 border border-white/20 text-white px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400"
+      />
+
+      <input
+        type="number"
+        id="minutesInput"
+        placeholder="Minutes"
+        min="0"
+        class="bg-white/10 border border-white/20 text-white px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400"
+      />
+
+      <input
+        type="number"
+        id="secondsInput"
+        placeholder="Seconds"
+        min="0"
+        class="bg-white/10 border border-white/20 text-white px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-cyan-400 placeholder-gray-400"
+      />
+
+    </div>
+
+    <!-- Timer Display -->
+    <div class="grid grid-cols-3 gap-4 text-center mb-8">
+
+      <!-- Hours -->
+      <div class="bg-black/30 rounded-3xl p-6 border border-white/10">
+        <h2 id="hours" class="text-5xl font-bold text-cyan-400">00</h2>
+        <p class="text-gray-300 mt-2">Hours</p>
+      </div>
+
+      <!-- Minutes -->
+      <div class="bg-black/30 rounded-3xl p-6 border border-white/10">
+        <h2 id="minutes" class="text-5xl font-bold text-pink-400">00</h2>
+        <p class="text-gray-300 mt-2">Minutes</p>
+      </div>
+
+      <!-- Seconds -->
+      <div class="bg-black/30 rounded-3xl p-6 border border-white/10">
+        <h2 id="seconds" class="text-5xl font-bold text-yellow-400">00</h2>
+        <p class="text-gray-300 mt-2">Seconds</p>
+      </div>
+
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="mb-8">
+      <div class="flex justify-between mb-2">
+        <span class="text-gray-300 text-sm">Progress</span>
+        <span id="progressText" class="text-cyan-400 text-sm">0%</span>
+      </div>
+
+      <div class="w-full h-5 bg-white/10 rounded-full overflow-hidden border border-white/10">
+        <div
+          id="progressBar"
+          class="h-full w-0 bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-400 transition-all duration-1000 rounded-full"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex flex-wrap gap-4 justify-center">
+
+      <button
+        id="startBtn"
+        class="bg-cyan-500 hover:bg-cyan-600 text-white px-8 py-3 rounded-2xl font-semibold transition duration-300 hover:scale-105 shadow-lg"
+      >
+        Start
+      </button>
+
+      <button
+        id="pauseBtn"
+        class="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-3 rounded-2xl font-semibold transition duration-300 hover:scale-105 shadow-lg"
+      >
+        Pause
+      </button>
+
+      <button
+        id="resetBtn"
+        class="bg-pink-500 hover:bg-pink-600 text-white px-8 py-3 rounded-2xl font-semibold transition duration-300 hover:scale-105 shadow-lg"
+      >
+        Reset
+      </button>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    const hoursDisplay = document.getElementById("hours");
+    const minutesDisplay = document.getElementById("minutes");
+    const secondsDisplay = document.getElementById("seconds");
+
+    const hoursInput = document.getElementById("hoursInput");
+    const minutesInput = document.getElementById("minutesInput");
+    const secondsInput = document.getElementById("secondsInput");
+
+    const progressBar = document.getElementById("progressBar");
+    const progressText = document.getElementById("progressText");
+
+    const startBtn = document.getElementById("startBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    let countdown;
+    let totalSeconds = 0;
+    let initialSeconds = 0;
+    let isPaused = false;
+
+    // Start Timer
+    startBtn.addEventListener("click", () => {
+
+      if (!isPaused) {
+
+        const hours = parseInt(hoursInput.value) || 0;
+        const minutes = parseInt(minutesInput.value) || 0;
+        const seconds = parseInt(secondsInput.value) || 0;
+
+        totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+
+        initialSeconds = totalSeconds;
+      }
+
+      if (totalSeconds <= 0) {
+        alert("Please enter valid time!");
+        return;
+      }
+
+      clearInterval(countdown);
+
+      isPaused = false;
+
+      countdown = setInterval(() => {
+
+        totalSeconds--;
+
+        updateDisplay();
+        updateProgress();
+
+        if (totalSeconds <= 0) {
+
+          clearInterval(countdown);
+
+          progressBar.style.width = "100%";
+          progressText.textContent = "100%";
+
+          alert("⏰ Time's Up!");
+
+        }
+
+      }, 1000);
+
+    });
+
+    // Pause Timer
+    pauseBtn.addEventListener("click", () => {
+
+      clearInterval(countdown);
+      isPaused = true;
+
+    });
+
+    // Reset Timer
+    resetBtn.addEventListener("click", () => {
+
+      clearInterval(countdown);
+
+      totalSeconds = 0;
+      initialSeconds = 0;
+
+      isPaused = false;
+
+      hoursDisplay.textContent = "00";
+      minutesDisplay.textContent = "00";
+      secondsDisplay.textContent = "00";
+
+      progressBar.style.width = "0%";
+      progressText.textContent = "0%";
+
+      hoursInput.value = "";
+      minutesInput.value = "";
+      secondsInput.value = "";
+
+    });
+
+    // Update Timer Display
+    function updateDisplay() {
+
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      hoursDisplay.textContent = String(hours).padStart(2, "0");
+      minutesDisplay.textContent = String(minutes).padStart(2, "0");
+      secondsDisplay.textContent = String(seconds).padStart(2, "0");
+
+    }
+
+    // Update Progress Bar
+    function updateProgress() {
+
+      const progress =
+        ((initialSeconds - totalSeconds) / initialSeconds) * 100;
+
+      progressBar.style.width = `${progress}%`;
+
+      progressText.textContent = `${Math.floor(progress)}%`;
+
+    }
+
+  </script>
+
+</body>
+</html>
