@@ -1,0 +1,215 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400&display=swap');
+  :root {
+    --hushed-bg: var(--color-background-primary);
+    --hushed-surface: var(--color-background-secondary);
+    --hushed-border: var(--color-border-tertiary);
+    --hushed-border-strong: var(--color-border-secondary);
+    --hushed-text: var(--color-text-primary);
+    --hushed-muted: var(--color-text-secondary);
+    --hushed-hint: var(--color-text-tertiary);
+    --hushed-accent: #1D9E75;
+    --hushed-accent-soft: #E1F5EE;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .ht-wrap { padding: 1.5rem 0; font-family: var(--font-sans); }
+  .ht-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 8px; }
+  .ht-title { font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 400; color: var(--hushed-text); }
+  .ht-subtitle { font-size: 13px; color: var(--hushed-muted); margin-top: 2px; }
+  .ht-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .ht-search { display: flex; align-items: center; gap: 6px; background: var(--hushed-surface); border: 0.5px solid var(--hushed-border-strong); border-radius: var(--border-radius-md); padding: 6px 10px; }
+  .ht-search input { background: none; border: none; outline: none; font-size: 13px; color: var(--hushed-text); width: 140px; font-family: var(--font-sans); }
+  .ht-search input::placeholder { color: var(--hushed-hint); }
+  .ht-search i { font-size: 15px; color: var(--hushed-muted); }
+  .ht-filter-wrap { display: flex; gap: 4px; }
+  .ht-chip { font-size: 12px; padding: 4px 10px; border-radius: 20px; border: 0.5px solid var(--hushed-border-strong); background: none; color: var(--hushed-muted); cursor: pointer; transition: all 0.15s; font-family: var(--font-sans); }
+  .ht-chip:hover { border-color: var(--hushed-accent); color: var(--hushed-accent); }
+  .ht-chip.active { background: var(--hushed-accent-soft); border-color: var(--hushed-accent); color: var(--hushed-accent); }
+  .ht-table-wrap { overflow-x: auto; border: 0.5px solid var(--hushed-border); border-radius: var(--border-radius-lg); }
+  table { width: 100%; border-collapse: collapse; table-layout: auto; }
+  thead { background: var(--hushed-surface); }
+  th { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--hushed-muted); padding: 10px 16px; text-align: left; border-bottom: 0.5px solid var(--hushed-border); white-space: nowrap; cursor: pointer; user-select: none; }
+  th:hover { color: var(--hushed-text); }
+  th .sort-icon { font-size: 11px; margin-left: 4px; opacity: 0.4; transition: opacity 0.15s; }
+  th:hover .sort-icon, th.sorted .sort-icon { opacity: 1; color: var(--hushed-accent); }
+  td { padding: 11px 16px; font-size: 13.5px; color: var(--hushed-text); border-bottom: 0.5px solid var(--hushed-border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tbody tr { transition: background 0.12s; }
+  tbody tr:hover { background: var(--hushed-surface); }
+  .mono { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--hushed-muted); }
+  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 500; }
+  .badge-green { background: #EAF3DE; color: #3B6D11; }
+  .badge-amber { background: #FAEEDA; color: #854F0B; }
+  .badge-red { background: #FCEBEB; color: #A32D2D; }
+  .badge-blue { background: #E6F1FB; color: #185FA5; }
+  .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.7; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; }
+  .av-teal { background: #E1F5EE; color: #0F6E56; }
+  .av-purple { background: #EEEDFE; color: #534AB7; }
+  .av-coral { background: #FAECE7; color: #993C1D; }
+  .av-blue { background: #E6F1FB; color: #185FA5; }
+  .av-amber { background: #FAEEDA; color: #854F0B; }
+  .person-cell { display: flex; align-items: center; gap: 9px; }
+  .person-info { display: flex; flex-direction: column; }
+  .person-name { font-size: 13.5px; font-weight: 500; color: var(--hushed-text); line-height: 1.2; }
+  .person-role { font-size: 11.5px; color: var(--hushed-muted); }
+  .progress-bar { height: 4px; background: var(--hushed-border); border-radius: 2px; overflow: hidden; width: 80px; }
+  .progress-fill { height: 100%; border-radius: 2px; background: var(--hushed-accent); transition: width 0.3s; }
+  .empty-state { padding: 2.5rem; text-align: center; color: var(--hushed-muted); font-size: 14px; }
+  .ht-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; flex-wrap: wrap; gap: 6px; }
+  .ht-count { font-size: 12px; color: var(--hushed-hint); }
+  .ht-pagination { display: flex; gap: 2px; }
+  .pg-btn { width: 28px; height: 28px; border-radius: var(--border-radius-md); border: 0.5px solid var(--hushed-border); background: none; font-size: 12px; color: var(--hushed-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.12s; font-family: var(--font-sans); }
+  .pg-btn:hover { background: var(--hushed-surface); color: var(--hushed-text); }
+  .pg-btn.active { background: var(--hushed-accent-soft); border-color: var(--hushed-accent); color: var(--hushed-accent); font-weight: 500; }
+  @media (max-width: 600px) {
+    .ht-header { flex-direction: column; align-items: flex-start; }
+    .ht-controls { width: 100%; }
+    .ht-search input { width: 110px; }
+    td, th { padding: 9px 10px; }
+    .progress-bar { width: 52px; }
+  }
+</style>
+
+<div class="ht-wrap">
+  <h2 class="sr-only">Team performance table with filtering and sorting</h2>
+  <div class="ht-header">
+    <div>
+      <div class="ht-title">Team overview</div>
+      <div class="ht-subtitle">Q2 2026 · 8 members</div>
+    </div>
+    <div class="ht-controls">
+      <div class="ht-search">
+        <i class="ti ti-search" aria-hidden="true"></i>
+        <input id="searchInput" type="text" placeholder="Search…" oninput="filterTable()" />
+      </div>
+      <div class="ht-filter-wrap" id="filterChips">
+        <button class="ht-chip active" onclick="setFilter('all',this)">All</button>
+        <button class="ht-chip" onclick="setFilter('active',this)">Active</button>
+        <button class="ht-chip" onclick="setFilter('review',this)">In review</button>
+        <button class="ht-chip" onclick="setFilter('away',this)">Away</button>
+      </div>
+    </div>
+  </div>
+  <div class="ht-table-wrap">
+    <table id="mainTable">
+      <thead>
+        <tr>
+          <th onclick="sortTable(0)" id="th0"><span>Member</span><span class="sort-icon"><i class="ti ti-chevrons-up-down"></i></span></th>
+          <th onclick="sortTable(1)" id="th1"><span>Department</span><span class="sort-icon"><i class="ti ti-chevrons-up-down"></i></span></th>
+          <th onclick="sortTable(2)" id="th2"><span>Status</span><span class="sort-icon"><i class="ti ti-chevrons-up-down"></i></span></th>
+          <th onclick="sortTable(3)" id="th3"><span>Tasks</span><span class="sort-icon"><i class="ti ti-chevrons-up-down"></i></span></th>
+          <th onclick="sortTable(4)" id="th4"><span>Progress</span><span class="sort-icon"><i class="ti ti-chevrons-up-down"></i></span></th>
+          <th onclick="sortTable(5)" id="th5"><span>Joined</span><span class="sort-icon"><i class="ti ti-chevrons-up-down"></i></span></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+  <div class="ht-footer">
+    <div class="ht-count" id="rowCount">Showing 8 of 8</div>
+    <div class="ht-pagination">
+      <button class="pg-btn active">1</button>
+      <button class="pg-btn">2</button>
+      <button class="pg-btn"><i class="ti ti-chevron-right" style="font-size:13px"></i></button>
+    </div>
+  </div>
+</div>
+
+<script>
+const data = [
+  { name:'Arjun Mehta', role:'Lead Designer', av:'AM', avc:'av-teal', dept:'Design', status:'active', tasks:14, progress:82, joined:'Jan 2024' },
+  { name:'Lucia Ferreira', role:'Frontend Eng', av:'LF', avc:'av-purple', dept:'Engineering', status:'active', tasks:22, progress:67, joined:'Mar 2023' },
+  { name:'Noah Osei', role:'Data Analyst', av:'NO', avc:'av-coral', dept:'Analytics', status:'review', tasks:9, progress:45, joined:'Jul 2024' },
+  { name:'Priya Rajan', role:'Product Mgr', av:'PR', avc:'av-blue', dept:'Product', status:'active', tasks:31, progress:91, joined:'Sep 2022' },
+  { name:'Tom Baxter', role:'DevOps Eng', av:'TB', avc:'av-amber', dept:'Engineering', status:'away', tasks:6, progress:33, joined:'Feb 2025' },
+  { name:'Yuna Park', role:'UX Researcher', av:'YP', avc:'av-teal', dept:'Design', status:'active', tasks:11, progress:74, joined:'Nov 2023' },
+  { name:'Carlos Vega', role:'Backend Eng', av:'CV', avc:'av-purple', dept:'Engineering', status:'review', tasks:18, progress:55, joined:'Apr 2024' },
+  { name:'Sienna Blake', role:'Scrum Master', av:'SB', avc:'av-coral', dept:'Product', status:'active', tasks:25, progress:88, joined:'Jun 2022' },
+];
+
+const statusBadge = {
+  active: '<span class="badge badge-green"><span class="badge-dot"></span>Active</span>',
+  review: '<span class="badge badge-amber"><span class="badge-dot"></span>In review</span>',
+  away:   '<span class="badge badge-blue"><span class="badge-dot"></span>Away</span>',
+};
+
+let currentFilter = 'all';
+let sortCol = -1, sortAsc = true;
+
+function render(rows) {
+  const tbody = document.getElementById('tableBody');
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No results found</td></tr>';
+    document.getElementById('rowCount').textContent = 'Showing 0 of ' + data.length;
+    return;
+  }
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td>
+        <div class="person-cell">
+          <div class="avatar ${r.avc}">${r.av}</div>
+          <div class="person-info">
+            <span class="person-name">${r.name}</span>
+            <span class="person-role">${r.role}</span>
+          </div>
+        </div>
+      </td>
+      <td class="mono">${r.dept}</td>
+      <td>${statusBadge[r.status]}</td>
+      <td style="font-variant-numeric: tabular-nums;">${r.tasks}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="progress-bar"><div class="progress-fill" style="width:${r.progress}%"></div></div>
+          <span style="font-size:12px;color:var(--hushed-muted);min-width:26px;">${r.progress}%</span>
+        </div>
+      </td>
+      <td class="mono">${r.joined}</td>
+    </tr>
+  `).join('');
+  document.getElementById('rowCount').textContent = `Showing ${rows.length} of ${data.length}`;
+}
+
+function getFiltered() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  return data.filter(r => {
+    const matchFilter = currentFilter === 'all' || r.status === currentFilter;
+    const matchSearch = !q || r.name.toLowerCase().includes(q) || r.dept.toLowerCase().includes(q) || r.role.toLowerCase().includes(q);
+    return matchFilter && matchSearch;
+  });
+}
+
+function filterTable() { render(getSorted(getFiltered())); }
+
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.ht-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  filterTable();
+}
+
+function getSorted(rows) {
+  if (sortCol < 0) return rows;
+  return [...rows].sort((a, b) => {
+    const keys = ['name','dept','status','tasks','progress','joined'];
+    const k = keys[sortCol];
+    const va = a[k], vb = b[k];
+    if (typeof va === 'number') return sortAsc ? va - vb : vb - va;
+    return sortAsc ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+  });
+}
+
+function sortTable(col) {
+  if (sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = true; }
+  document.querySelectorAll('th').forEach((t,i) => {
+    t.classList.toggle('sorted', i === col);
+    const icon = t.querySelector('.sort-icon i');
+    if (i === col) icon.className = sortAsc ? 'ti ti-chevron-up' : 'ti ti-chevron-down';
+    else icon.className = 'ti ti-chevrons-up-down';
+  });
+  render(getSorted(getFiltered()));
+}
+
+render(data);
+</script>
