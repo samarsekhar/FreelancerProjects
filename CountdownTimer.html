@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Countdown Timer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"DM Serif Display"', 'serif'],
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 2s cubic-bezier(.4,0,.6,1) infinite',
+                        'flip': 'flip 0.4s ease both',
+                        'ping-once': 'ping 0.6s ease-out 1',
+                    },
+                    keyframes: {
+                        flip: {
+                            '0%': { transform: 'rotateX(0deg)', opacity: '1' },
+                            '50%': { transform: 'rotateX(-90deg)', opacity: '0.3' },
+                            '100%': { transform: 'rotateX(0deg)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .bg-noise {
+            background-color: #0f0f13;
+            background-image:
+                radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99, 76, 255, 0.18) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 60%);
+        }
+
+        .digit-card {
+            perspective: 600px;
+        }
+
+        .digit-inner {
+            transition: transform 0.35s cubic-bezier(.4, 0, .2, 1), opacity 0.35s;
+            display: inline-block;
+        }
+
+        .digit-inner.flip-anim {
+            animation: flip 0.38s ease both;
+        }
+
+        .glow-violet {
+            box-shadow: 0 0 32px 0 rgba(99, 76, 255, 0.25), 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .glow-pink {
+            box-shadow: 0 0 32px 0 rgba(236, 72, 153, 0.2), 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .glow-teal {
+            box-shadow: 0 0 32px 0 rgba(20, 184, 166, 0.2), 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-glow:hover {
+            box-shadow: 0 0 24px 0 rgba(99, 76, 255, 0.5);
+        }
+
+        .btn-glow {
+            transition: box-shadow 0.2s, transform 0.15s, background 0.15s;
+        }
+
+        .btn-glow:active {
+            transform: scale(0.96);
+        }
+
+        .progress-track {
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .progress-bar {
+            transition: width 0.9s linear;
+            background: linear-gradient(90deg, #6344ff, #ec4899);
+        }
+
+        .preset-btn {
+            transition: all 0.15s;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .preset-btn:hover {
+            border-color: rgba(99, 76, 255, 0.6);
+            background: rgba(99, 76, 255, 0.12);
+        }
+
+        .preset-btn:active {
+            transform: scale(0.96);
+        }
+
+        .input-time {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            outline: none;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+
+        .input-time:focus {
+            border-color: #6344ff;
+            box-shadow: 0 0 0 3px rgba(99, 76, 255, 0.2);
+        }
+
+        .input-time::-webkit-inner-spin-button {
+            display: none;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-8px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(8px);
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes expire-pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .expired-anim .digit-inner {
+            animation: expire-pulse 0.7s ease infinite;
+            color: #f87171;
+        }
+
+        .ring-progress {
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .ring-track {
+            stroke: rgba(255, 255, 255, 0.07);
+        }
+
+        .ring-fill {
+            stroke: url(#ringGrad);
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.9s linear;
+        }
+    </style>
+</head>
+
+<body class="bg-noise min-h-screen flex items-center justify-center p-4 text-white">
+
+    <div class="w-full max-w-md">
+
+        <!-- Title -->
+        <div class="text-center mb-8">
+            <h1 class="font-serif text-4xl text-white/90 mb-1">Countdown</h1>
+            <p class="text-white/30 text-sm font-light tracking-widest uppercase">Timer</p>
+        </div>
+
+        <!-- Digits card -->
+        <div class="relative flex justify-center mb-6">
+
+            <!-- Digit blocks -->
+            <div id="timerDisplay" class="relative z-10 flex items-center gap-2 py-14">
+
+                <!-- Hours -->
+                <div class="digit-card text-center">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl px-5 py-4 glow-violet min-w-[80px]">
+                        <div id="dHours" class="digit-inner font-serif text-5xl text-white leading-none">00</div>
+                    </div>
+                    <p class="text-white/25 text-[10px] uppercase tracking-widest mt-2 font-medium">Hours</p>
+                </div>
+
+                <span class="text-white/20 text-4xl font-light mb-4 select-none">:</span>
+
+                <!-- Minutes -->
+                <div class="digit-card text-center">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl px-5 py-4 glow-violet min-w-[80px]">
+                        <div id="dMinutes" class="digit-inner font-serif text-5xl text-white leading-none">00</div>
+                    </div>
+                    <p class="text-white/25 text-[10px] uppercase tracking-widest mt-2 font-medium">Minutes</p>
+                </div>
+
+                <span class="text-white/20 text-4xl font-light mb-4 select-none">:</span>
+
+                <!-- Seconds -->
+                <div class="digit-card text-center">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl px-5 py-4 glow-violet min-w-[80px]">
+                        <div id="dSeconds" class="digit-inner font-serif text-5xl text-white leading-none">00</div>
+                    </div>
+                    <p class="text-white/25 text-[10px] uppercase tracking-widest mt-2 font-medium">Seconds</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="progress-track rounded-full h-1 mb-6 overflow-hidden">
+            <div id="progressBar" class="progress-bar h-full rounded-full" style="width:100%"></div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex gap-3 justify-center mb-6">
+            <button id="btnStart" onclick="startTimer()"
+                class="btn-glow flex-1 py-3 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-semibold text-sm tracking-wide">
+                ▶ Start
+            </button>
+            <button onclick="pauseTimer()"
+                class="btn-glow flex-1 py-3 rounded-xl bg-white/8 hover:bg-white/12 border border-white/10 text-white/70 font-semibold text-sm tracking-wide">
+                ⏸ Pause
+            </button>
+            <button onclick="resetTimer()"
+                class="btn-glow px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/50 font-semibold text-sm">
+                ↺
+            </button>
+        </div>
+
+        <!-- Custom time inputs -->
+        <div id="inputPanel" class="bg-white/4 border border-white/8 rounded-2xl p-4 mb-4">
+            <p class="text-white/30 text-[10px] uppercase tracking-widest font-medium mb-3">Set custom time</p>
+            <div class="flex gap-2 items-center">
+                <div class="flex-1">
+                    <label class="text-white/30 text-[10px] block mb-1 uppercase tracking-wider">HH</label>
+                    <input id="inputH" type="number" min="0" max="99" value="0" placeholder="00"
+                        class="input-time w-full rounded-lg px-3 py-2 text-center text-lg font-semibold" />
+                </div>
+                <span class="text-white/20 text-xl mt-4">:</span>
+                <div class="flex-1">
+                    <label class="text-white/30 text-[10px] block mb-1 uppercase tracking-wider">MM</label>
+                    <input id="inputM" type="number" min="0" max="59" value="0" placeholder="00"
+                        class="input-time w-full rounded-lg px-3 py-2 text-center text-lg font-semibold" />
+                </div>
+                <span class="text-white/20 text-xl mt-4">:</span>
+                <div class="flex-1">
+                    <label class="text-white/30 text-[10px] block mb-1 uppercase tracking-wider">SS</label>
+                    <input id="inputS" type="number" min="0" max="59" value="0" placeholder="00"
+                        class="input-time w-full rounded-lg px-3 py-2 text-center text-lg font-semibold" />
+                </div>
+                <button onclick="applyCustomTime()"
+                    class="btn-glow mt-4 px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-500 text-white text-sm font-semibold">
+                    Set
+                </button>
+            </div>
+        </div>
+
+        <!-- Presets -->
+        <div class="grid grid-cols-4 gap-2">
+            <button class="preset-btn rounded-xl py-2.5 text-xs text-white/50 font-medium bg-white/3 hover:text-white"
+                onclick="setPreset(1,0,0)">1 min</button>
+            <button class="preset-btn rounded-xl py-2.5 text-xs text-white/50 font-medium bg-white/3 hover:text-white"
+                onclick="setPreset(5,0,0)">5 min</button>
+            <button class="preset-btn rounded-xl py-2.5 text-xs text-white/50 font-medium bg-white/3 hover:text-white"
+                onclick="setPreset(10,0,0)">10 min</button>
+            <button class="preset-btn rounded-xl py-2.5 text-xs text-white/50 font-medium bg-white/3 hover:text-white"
+                onclick="setPreset(25,0,0)">25 min</button>
+        </div>
+
+        <!-- Expired message -->
+        <div id="expiredMsg" class="hidden mt-5 text-center">
+            <p class="text-pink-400 font-semibold text-sm tracking-wide animate-pulse">⏰ Time's up!</p>
+        </div>
+
+    </div>
+
+    <script>
+        let totalSeconds = 0, remaining = 0, interval = null, running = false, initialTotal = 0;
+
+        const dH = document.getElementById('dHours');
+        const dM = document.getElementById('dMinutes');
+        const dS = document.getElementById('dSeconds');
+        const bar = document.getElementById('progressBar');
+        const ring = document.getElementById('ringFill');
+        const CIRC = 867;
+
+        function pad(n) { return String(n).padStart(2, '0'); }
+
+        function flipEl(el, val) {
+            const cur = el.textContent;
+            if (cur === val) return;
+            el.classList.remove('flip-anim');
+            void el.offsetWidth;
+            el.classList.add('flip-anim');
+            el.textContent = val;
+        }
+
+        function render() {
+            const h = Math.floor(remaining / 3600);
+            const m = Math.floor((remaining % 3600) / 60);
+            const s = remaining % 60;
+            flipEl(dH, pad(h));
+            flipEl(dM, pad(m));
+            flipEl(dS, pad(s));
+
+            const pct = initialTotal > 0 ? remaining / initialTotal : 1;
+            bar.style.width = (pct * 100) + '%';
+            ring.style.strokeDashoffset = CIRC * (1 - pct);
+        }
+
+        function startTimer() {
+            if (running) return;
+            if (remaining <= 0) {
+                // read from inputs if nothing set
+                applyCustomTime(true);
+                if (remaining <= 0) { shakeDisplay(); return; }
+            }
+            document.getElementById('expiredMsg').classList.add('hidden');
+            document.getElementById('timerDisplay').classList.remove('expired-anim');
+            running = true;
+            interval = setInterval(() => {
+                if (remaining <= 0) { expire(); return; }
+                remaining--;
+                render();
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            clearInterval(interval);
+            running = false;
+        }
+
+        function resetTimer() {
+            clearInterval(interval);
+            running = false;
+            remaining = initialTotal;
+            document.getElementById('expiredMsg').classList.add('hidden');
+            document.getElementById('timerDisplay').classList.remove('expired-anim');
+            [dH, dM, dS].forEach(el => { el.style.color = ''; });
+            render();
+        }
+
+        function expire() {
+            clearInterval(interval);
+            running = false;
+            remaining = 0;
+            render();
+            document.getElementById('expiredMsg').classList.remove('hidden');
+            document.getElementById('timerDisplay').classList.add('expired-anim');
+            // browser notification if granted
+            if (Notification && Notification.permission === 'granted') {
+                new Notification("Countdown Timer", { body: "Time's up!" });
+            }
+        }
+
+        function applyCustomTime(silent) {
+            const h = parseInt(document.getElementById('inputH').value) || 0;
+            const m = parseInt(document.getElementById('inputM').value) || 0;
+            const s = parseInt(document.getElementById('inputS').value) || 0;
+            const total = h * 3600 + m * 60 + s;
+            if (!total && !silent) { shakeDisplay(); return; }
+            clearInterval(interval); running = false;
+            initialTotal = total;
+            remaining = total;
+            document.getElementById('expiredMsg').classList.add('hidden');
+            document.getElementById('timerDisplay').classList.remove('expired-anim');
+            render();
+        }
+
+        function setPreset(m, s, extra) {
+            clearInterval(interval); running = false;
+            initialTotal = m * 60 + s;
+            remaining = initialTotal;
+            document.getElementById('inputH').value = 0;
+            document.getElementById('inputM').value = m;
+            document.getElementById('inputS').value = s;
+            document.getElementById('expiredMsg').classList.add('hidden');
+            document.getElementById('timerDisplay').classList.remove('expired-anim');
+            render();
+        }
+
+        function shakeDisplay() {
+            const d = document.getElementById('timerDisplay');
+            d.classList.remove('shake');
+            void d.offsetWidth;
+            d.classList.add('shake');
+        }
+
+        // init
+        render();
+    </script>
+</body>
+
+</html>
