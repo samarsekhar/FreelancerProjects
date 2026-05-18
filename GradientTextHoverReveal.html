@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gradient Text Hover Reveal</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400&display=swap"
+        rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #060608;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+            font-family: 'DM Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .subtitle {
+            font-size: 11px;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: #444;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+        }
+
+        .words-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15em;
+            text-align: center;
+        }
+
+        .word-row {
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            display: inline-block;
+            align-self: center;
+        }
+
+        .word-base {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            font-weight: 900;
+            line-height: 1.0;
+            color: #1a1a1f;
+            letter-spacing: -0.02em;
+            display: block;
+            user-select: none;
+            -webkit-text-stroke: 0.5px #2a2a35;
+        }
+
+        .word-gradient {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            font-weight: 900;
+            line-height: 1.0;
+            letter-spacing: -0.02em;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            white-space: nowrap;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            clip-path: inset(0 100% 0 0);
+            transition: clip-path 0.55s cubic-bezier(0.77, 0, 0.18, 1);
+            user-select: none;
+        }
+
+        .word-row:hover .word-gradient {
+            clip-path: inset(0 0% 0 0);
+        }
+
+        /* Gradient variants per row */
+        .row-1 .word-gradient {
+            background-image: linear-gradient(135deg, #a78bfa, #ec4899, #f97316);
+        }
+
+        .row-2 .word-gradient {
+            background-image: linear-gradient(135deg, #34d399, #06b6d4, #3b82f6);
+        }
+
+        .row-3 .word-gradient {
+            background-image: linear-gradient(135deg, #fbbf24, #f43f5e, #8b5cf6);
+        }
+
+        .row-4 .word-gradient {
+            background-image: linear-gradient(135deg, #60a5fa, #a78bfa, #f0abfc);
+        }
+
+        /* Underline reveal */
+        .word-row::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 0;
+            height: 1.5px;
+            width: 0%;
+            transition: width 0.55s cubic-bezier(0.77, 0, 0.18, 1);
+        }
+
+        .row-1::after {
+            background: linear-gradient(90deg, #a78bfa, #ec4899, #f97316);
+        }
+
+        .row-2::after {
+            background: linear-gradient(90deg, #34d399, #06b6d4, #3b82f6);
+        }
+
+        .row-3::after {
+            background: linear-gradient(90deg, #fbbf24, #f43f5e, #8b5cf6);
+        }
+
+        .row-4::after {
+            background: linear-gradient(90deg, #60a5fa, #a78bfa, #f0abfc);
+        }
+
+        .word-row:hover::after {
+            width: 100%;
+        }
+
+        /* Glow blob */
+        .glow-blob {
+            position: fixed;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(80px);
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.4s ease, background 0.3s ease;
+            z-index: 0;
+        }
+
+        .words-container,
+        .subtitle,
+        .hint,
+        .separator {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hint {
+            margin-top: 3rem;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #2d2d38;
+            font-weight: 300;
+        }
+
+        .separator {
+            width: 40px;
+            height: 1px;
+            background: #222;
+            margin: 2rem auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="glow-blob" id="blob"></div>
+
+    <p class="subtitle">Hover to reveal</p>
+
+    <div class="words-container">
+        <div class="word-row row-1">
+            <span class="word-base">Beautiful</span>
+            <span class="word-gradient">Beautiful</span>
+        </div>
+        <div class="word-row row-2">
+            <span class="word-base">Gradient</span>
+            <span class="word-gradient">Gradient</span>
+        </div>
+        <div class="word-row row-3">
+            <span class="word-base">Reveals</span>
+            <span class="word-gradient">Reveals</span>
+        </div>
+        <div class="word-row row-4">
+            <span class="word-base">Motion</span>
+            <span class="word-gradient">Motion</span>
+        </div>
+    </div>
+
+    <div class="separator"></div>
+    <p class="hint">Developer Samarsekhar</p>
+
+    <script>
+        const blob = document.getElementById('blob');
+        const gradients = [
+            'radial-gradient(circle, rgba(167,139,250,0.35), rgba(236,72,153,0.2), transparent)',
+            'radial-gradient(circle, rgba(52,211,153,0.35), rgba(6,182,212,0.2), transparent)',
+            'radial-gradient(circle, rgba(251,191,36,0.35), rgba(244,63,94,0.2), transparent)',
+            'radial-gradient(circle, rgba(96,165,250,0.35), rgba(167,139,250,0.2), transparent)',
+        ];
+
+        document.querySelectorAll('.word-row').forEach((row, i) => {
+            row.addEventListener('mouseenter', () => {
+                blob.style.background = gradients[i];
+                blob.style.opacity = '1';
+            });
+            row.addEventListener('mouseleave', () => {
+                blob.style.opacity = '0';
+            });
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            blob.style.left = e.clientX + 'px';
+            blob.style.top = e.clientY + 'px';
+        });
+    </script>
+
+</body>
+
+</html>
