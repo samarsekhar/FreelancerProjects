@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Rotating Carousel</title>
+<!-- <link rel="stylesheet" href="style.css"> -->
+  <style>
+    *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:#e5e5e5;
+    font-family:Arial,sans-serif;
+}
+
+.scene{
+    width:500px;
+    height:250px;
+    perspective:1000px;
+}
+
+.carousel{
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:transform 1s ease;
+}
+
+.cell{
+    position:absolute;
+    width:220px;
+    height:120px;
+    left:140px;
+    top:60px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:4rem;
+    font-weight:bold;
+    color:white;
+
+    border:3px solid rgba(0,0,0,.25);
+    box-shadow:
+        0 10px 25px rgba(0,0,0,.25),
+        inset 0 0 20px rgba(255,255,255,.15);
+
+    backdrop-filter:blur(5px);
+}
+
+.cell:nth-child(1){background:#ff2d2d;}
+.cell:nth-child(2){background:#f7c600;}
+.cell:nth-child(3){background:#ff8c00;}
+.cell:nth-child(4){background:#39ff14;}
+.cell:nth-child(5){background:#00bfff;}
+.cell:nth-child(6){background:#0057ff;}
+.cell:nth-child(7){background:#7f00ff;}
+.cell:nth-child(8){background:#d000ff;}
+
+.controls{
+    margin-top:40px;
+}
+
+button{
+    padding:10px 20px;
+    font-size:18px;
+    cursor:pointer;
+    margin:0 10px;
+}
+  </style>
+</head>
+<body>
+
+<div class="scene">
+    <div class="carousel" id="carousel">
+        <div class="cell">1</div>
+        <div class="cell">2</div>
+        <div class="cell">3</div>
+        <div class="cell">4</div>
+        <div class="cell">5</div>
+        <div class="cell">6</div>
+        <div class="cell">7</div>
+        <div class="cell">8</div>
+    </div>
+</div>
+
+<div class="controls">
+    <button id="prev">Previous</button>
+    <button id="next">Next</button>
+</div>
+
+<!-- <script src="script.js"></script> -->
+  <script>
+    const carousel = document.getElementById("carousel");
+    const cells = carousel.querySelectorAll(".cell");
+
+    const cellCount = cells.length;
+    const theta = 360 / cellCount;
+    const radius = 300;
+
+    let selectedIndex = 0;
+
+// Position panels in circle
+cells.forEach((cell, i) => {
+    const angle = theta * i;
+    cell.style.transform =
+        `rotateY(${angle}deg) translateZ(${radius}px)`;
+});
+
+function rotateCarousel() {
+    const angle = theta * selectedIndex * -1;
+    carousel.style.transform =
+        `translateZ(-${radius}px) rotateY(${angle}deg)`;
+}
+
+document.getElementById("next").onclick = () => {
+    selectedIndex++;
+    rotateCarousel();
+};
+
+document.getElementById("prev").onclick = () => {
+    selectedIndex--;
+    rotateCarousel();
+};
+
+rotateCarousel();
+  </script>
+</body>
+</html>
