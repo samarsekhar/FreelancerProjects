@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text Blur Hover</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #111;
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .blur-text {
+        font-size: 40px;
+        font-weight: bold;
+        color: white;
+        cursor: pointer;
+      }
+
+      .blur-text span {
+        transition: 0.3s ease;
+      }
+
+      .blur-text:hover span {
+        filter: blur(8px);
+        opacity: 0.5;
+      }
+
+      .blur-text span:hover {
+        filter: blur(0);
+        opacity: 1;
+        color: #00ffff;
+      }
+
+      .blur-text:hover span {
+        filter: blur(6px);
+      }
+
+      .blur-text span:hover {
+        filter: blur(0);
+        text-shadow:
+          0 0 15px #00ffff,
+          0 0 30px #00ffff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="blur-text">
+      <span>I</span>
+      <span>'</span>
+      <span>A</span>
+      <span>M</span>
+      <br />
+      <span>&nbsp;</span>
+      <span>C</span>
+      <span>O</span>
+      <span>N</span>
+      <span>F</span>
+      <span>I</span>
+      <span>D</span>
+      <span>E</span>
+      <span>N</span>
+      <span>T</span>
+    </h1>
+  </body>
+</html>
