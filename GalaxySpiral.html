@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>01 · Galaxy Spiral</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #000; overflow: hidden; font-family: 'Courier New', monospace; }
+  canvas { display: block; }
+  #label {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    color: rgba(160,200,255,0.6); font-size: 12px; letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+<div id="label">Galaxy Spiral · Three.js</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
+camera.position.set(0, 4, 8);
+camera.lookAt(0,0,0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(devicePixelRatio);
+document.body.appendChild(renderer.domElement);
+
+// Galaxy parameters
+const COUNT = 80000;
+const ARMS = 5;
+const SPIN = 1.2;
+const RADIUS = 6;
+
+const positions = new Float32Array(COUNT * 3);
+const colors = new Float32Array(COUNT * 3);
+const col1 = new THREE.Color('#5588ff');
+const col2 = new THREE.Color('#ff8833');
+
+for (let i = 0; i < COUNT; i++) {
+  const r = Math.random() * RADIUS;
+  const arm = (i % ARMS) / ARMS * Math.PI * 2;
+  const spin = r * SPIN;
+  const scatter = (Math.random() - 0.5) * r * 0.4;
+  const angle = arm + spin;
+  positions[i*3]   = Math.cos(angle) * r + scatter;
+  positions[i*3+1] = (Math.random() - 0.5) * 0.3;
+  positions[i*3+2] = Math.sin(angle) * r + scatter;
+  const t = r / RADIUS;
+  const c = col1.clone().lerp(col2, t);
+  colors[i*3] = c.r; colors[i*3+1] = c.g; colors[i*3+2] = c.b;
+}
+
+const geo = new THREE.BufferGeometry();
+geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+const mat = new THREE.PointsMaterial({ size: 0.015, vertexColors: true, transparent: true, opacity: 0.85 });
+const galaxy = new THREE.Points(geo, mat);
+scene.add(galaxy);
+
+// Center glow
+const glowGeo = new THREE.SphereGeometry(0.3, 16, 16);
+const glowMat = new THREE.MeshBasicMaterial({ color: '#ffffff' });
+scene.add(new THREE.Mesh(glowGeo, glowMat));
+
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+let t = 0;
+(function animate() {
+  requestAnimationFrame(animate);
+  t += 0.003;
+  galaxy.rotation.y = t;
+  camera.position.x = Math.sin(t * 0.2) * 0.5;
+  renderer.render(scene, camera);
+})();
+</script>
+</body>
+</html>
