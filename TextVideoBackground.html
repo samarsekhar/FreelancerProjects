@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Text with Video Background Effect</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: sans-serif;
+      }
+      section {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+      }
+
+      section video {
+        width: 100%;
+        height: 100%;
+      }
+
+      h2 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #000;
+        height: 100%;
+        width: 100%;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14vw;
+        font-weight: 900;
+        text-align: center;
+        text-transform: uppercase;
+        mix-blend-mode: multiply;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <video autoplay loop muted>
+        <source
+          src="https://cdn.pixabay.com/video/2025/02/11/257777_tiny.mp4"
+          type="video/mp4"
+        />
+      </video>
+      <h2>
+        NEVER<br />
+        GIVE UP
+      </h2>
+    </section>
+  </body>
+</html>
