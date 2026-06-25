@@ -1,3 +1,5 @@
+// Make a Script to print the lyrics of the song "Sunn Le Yeh Sadaa" with delays between each line.
+
 const lyrics = [
   "🎶 Sunn Le Yeh Sadaa.....",
   "💖 Kaisi Dillagi Hai Tu.....",
