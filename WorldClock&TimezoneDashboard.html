@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Clock & Timezone Dashboard</title>
+    <style>
+        :root {
+            --bg: #0a0a0b;
+            --card: #141417;
+            --accent: #ff006a;
+            --text: #e0e0e0;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        .clock-card {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .clock-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .face {
+            width: 80px;
+            height: 80px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            position: relative;
+        }
+
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom;
+            background: var(--text);
+            border-radius: 4px;
+        }
+
+        .hour {
+            width: 3px;
+            height: 20px;
+            margin-left: -1.5px;
+        }
+
+        .min {
+            width: 2px;
+            height: 30px;
+            margin-left: -1px;
+            opacity: 0.8;
+        }
+
+        .city {
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        .time {
+            font-size: 24px;
+            margin: 10px 0;
+            font-variant-numeric: tabular-nums;
+            color: var(--accent);
+        }
+
+        .status {
+            font-size: 11px;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard" id="dash"></div>
+
+    <script>
+        const cities = [
+            { name: "Bangalore", tz: "Asia/Kolkata" },
+            { name: 'San Francisco', tz: 'America/Los_Angeles' },
+            { name: 'London', tz: 'Europe/London' },
+            { name: 'Dubai', tz: 'Asia/Dubai' },
+        ];
+        function createClocks() {
+            const dash = document.getElementById('dash');
+            dash.innerHTML = cities.map(city => `
+<div class="clock-card" id="${city.name}">
+<div class="face">
+<div class="hand hour"></div>
+<div class="hand min"></div>
+</div>
+<div class="city">${city.name}</div>
+<div class="time">00:00</div>
+<div class="status">CHECKING...</div>
+</div>
+`).join('');
+        }
+        function update() {
+            cities.forEach(city => {
+                const now = new Date();
+                const str = now.toLocaleTimeString('en-US', { timeZone: city.tz, hour12: false });
+                const [h, m] = str.split(':').map(Number);
+                const card = document.getElementById(city.name);
+                card.querySelector('.time').textContent = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+                card.querySelector('.hour').style.transform = `rotate(${(h * 30) + (m / 2)}deg)`;
+                card.querySelector('.min').style.transform = `rotate(${m * 6}deg)`;
+                const isDay = h >= 6 && h < 18;
+                card.querySelector('.status').textContent = isDay ? 'DAYTIME' : 'NIGHTTIME';
+                card.style.opacity = isDay ? '1' : '0.6';
+            });
+        }
+        createClocks();
+        setInterval(update, 1000);
+        update();
+    </script>
+</body>
+
+</html>
