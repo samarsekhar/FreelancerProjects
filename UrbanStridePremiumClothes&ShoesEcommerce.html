@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>UrbanStride | Premium Clothes & Shoes | Developer Samarsekhar</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #fafafc;
+            color: #1a1e2b;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header {
+            background: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 18px 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e2a3a, #0f172a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo i {
+            color: #3b82f6;
+            background: none;
+            margin-right: 6px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #2c3e50;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #3b82f6;
+        }
+
+        .cart-icon,
+        .user-icon {
+            font-size: 1.25rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -12px;
+            background: #ef4444;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border-radius: 30px;
+            padding: 2px 6px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-outline-sm {
+            background: transparent;
+            border: 1px solid #cbd5e1;
+            padding: 6px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .btn-outline-sm:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        .btn-primary-sm {
+            background: #1e293b;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .hero {
+            background: linear-gradient(120deg, #f1f5f9, #ffffff);
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin: 48px 0 24px;
+            font-weight: 600;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 32px;
+            margin-bottom: 60px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02);
+            transition: all 0.25s ease;
+            border: 1px solid #edf2f7;
+            padding: 16px;
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-img {
+            background: #f8fafc;
+            border-radius: 20px;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-img img {
+            transform: scale(1.03);
+        }
+
+        .product-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .product-price {
+            color: #2c3e50;
+            font-weight: 700;
+            margin: 8px 0;
+        }
+
+        .add-to-cart {
+            background: #0f172a;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .add-to-cart:hover {
+            background: #3b82f6;
+        }
+
+        /* Order History Styles */
+        .order-history-list {
+            background: white;
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 60px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid #edf2f7;
+        }
+
+        .order-item {
+            border-bottom: 1px solid #eef2f6;
+            padding: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-details {
+            flex: 2;
+        }
+
+        .order-id {
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .order-meta {
+            font-size: 0.85rem;
+            color: #5b6e8c;
+            margin-top: 6px;
+        }
+
+        .order-total {
+            font-weight: 700;
+            color: #0f172a;
+            font-size: 1.2rem;
+        }
+
+        .empty-history {
+            text-align: center;
+            padding: 48px;
+            color: #6c7a91;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 500px;
+            width: 90%;
+            border-radius: 32px;
+            padding: 28px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .checkout-btn {
+            background: #10b981;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .delivery-step {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 24px;
+            margin-top: 20px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 28px;
+        }
+
+        .ai-assistant {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 99;
+        }
+
+        .ai-bubble {
+            background: #1e293b;
+            width: 60px;
+            height: 60px;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: 0.2s;
+        }
+
+        .ai-chat {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 320px;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .ai-header {
+            background: #0f172a;
+            color: white;
+            padding: 14px;
+            font-weight: bold;
+        }
+
+        .ai-messages {
+            height: 280px;
+            overflow-y: auto;
+            padding: 12px;
+            background: #f9f9ff;
+        }
+
+        .ai-input {
+            display: flex;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .ai-input input {
+            border: none;
+            margin: 0;
+            border-radius: 0;
+            flex: 1;
+        }
+
+        .ai-input button {
+            background: #3b82f6;
+            border: none;
+            color: white;
+            padding: 0 16px;
+            cursor: pointer;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            border-radius: 18px;
+            max-width: 85%;
+        }
+
+        .user-msg {
+            background: #3b82f6;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .bot-msg {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        footer {
+            text-align: center;
+            padding: 32px;
+            background: #0f172a;
+            color: #94a3b8;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 700px) {
+            .navbar {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <div class="navbar">
+                <div class="logo"><i class="fas fa-shoe-prints"></i> UrbanStride</div>
+                <div class="nav-links">
+                    <a id="shopLink" class="active">Shop</a>
+                    <a id="ordersLink">Order History</a>
+                    <div class="cart-icon" id="cartIconBtn">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </div>
+                    <div id="authSection" class="auth-buttons">
+                        <button class="btn-outline-sm" id="loginBtn">Login</button>
+                        <button class="btn-primary-sm" id="signupBtn">Sign up</button>
+                    </div>
+                    <div id="userInfoSection" style="display: none;" class="auth-buttons">
+                        <span id="userNameDisplay" style="font-weight:500;"></span>
+                        <button class="btn-outline-sm" id="logoutBtn">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="hero">
+            <div class="container">
+                <h1>Premium collection <br> Clothes & Shoes</h1>
+                <p>Effortless style, express delivery & AI shopping guide</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Shop Section -->
+            <div id="shopSection">
+                <h2 class="section-title">✨ Trending Now</h2>
+                <div class="products-grid" id="productsGrid"></div>
+            </div>
+
+            <!-- Order History Section (hidden initially) -->
+            <div id="ordersSection" style="display: none;">
+                <h2 class="section-title">📦 Your Order History</h2>
+                <div id="orderHistoryContainer" class="order-history-list"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <h3>Your Cart 🛍️</h3>
+            <div id="cartItemsList"></div>
+            <div id="cartTotal" style="font-weight:bold; margin: 16px 0;"></div>
+            <button id="proceedCheckoutBtn" class="checkout-btn">Proceed to Checkout</button>
+            <button id="closeCartBtn"
+                style="margin-top:12px; background:#e2e8f0; width:100%; padding:10px; border:none; border-radius:40px;">Close</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content">
+            <h3>Delivery Details</h3>
+            <div class="delivery-step">
+                <input type="text" id="fullName" placeholder="Full Name" required>
+                <input type="text" id="address" placeholder="Street Address" required>
+                <input type="text" id="city" placeholder="City" required>
+                <select id="deliveryMethod">
+                    <option value="standard">Standard (3-5 days) - Free</option>
+                    <option value="express">Express (1-2 days) - $9.99</option>
+                </select>
+                <button id="confirmDeliveryBtn" class="checkout-btn" style="background:#3b82f6;">Confirm Order &
+                    Track</button>
+            </div>
+            <button id="closeCheckoutBtn"
+                style="margin-top:12px; background:#e2e8f0; width:100%; padding:10px; border:none; border-radius:40px;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content" style="text-align:center;">
+            <i class="fas fa-check-circle" style="font-size: 4rem; color: #10b981;"></i>
+            <h3>Order Confirmed! ✅</h3>
+            <p id="confirmationMsg">Your order will be delivered soon.</p>
+            <button id="closeConfirmBtn"
+                style="background:#0f172a; color:white; padding:12px 24px; border-radius:40px; margin-top:16px;">Continue
+                Shopping</button>
+        </div>
+    </div>
+
+    <!-- AI Assistant -->
+    <div class="ai-assistant">
+        <div class="ai-bubble" id="aiToggleBtn">
+            <i class="fas fa-robot"></i>
+        </div>
+        <div class="ai-chat" id="aiChatWindow">
+            <div class="ai-header">👟 Style AI Assistant</div>
+            <div class="ai-messages" id="aiMessages">
+                <div class="message bot-msg">Hello! I can suggest outfits or help with checkout. Ask me anything!</div>
+            </div>
+            <div class="ai-input">
+                <input type="text" id="aiInput" placeholder="e.g., recommend sneakers...">
+                <button id="sendAiMsg"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 UrbanStride — Style that moves with you.</p>
+    </footer>
+
+    <script>
+        // ---------- REAL PRODUCT IMAGES (Unsplash / High-quality free stock) ----------
+        const products = [
+            { id: 1, name: "Cotton Oversized Tee", category: "clothes", price: 29.99, image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop", alt: "Oversized T-shirt" },
+            { id: 2, name: "Slim Fit Jeans", category: "clothes", price: 59.99, image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=400&fit=crop", alt: "Slim Jeans" },
+            { id: 3, name: "Hoodie Fleece", category: "clothes", price: 69.99, image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop", alt: "Fleece Hoodie" },
+            { id: 4, name: "Running Shoes", category: "shoes", price: 89.99, image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop", alt: "Running shoes" },
+            { id: 5, name: "Leather Sneakers", category: "shoes", price: 119.99, image: "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=400&h=400&fit=crop", alt: "Leather sneakers" },
+            { id: 6, name: "Slip-on Loafers", category: "shoes", price: 74.99, image: "https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=400&h=400&fit=crop", alt: "Loafers" }
+        ];
+
+        // ---------- Data Models ----------
+        let currentUser = null;          // { email, name }
+        let cart = [];                   // { id, product, quantity }
+        let orderHistory = [];           // each order: { orderId, date, items, total, deliveryDetails, trackingId, deliveryMethod }
+
+        // Helper: load/save user data from localStorage
+        function loadUserData() {
+            if (!currentUser) return;
+            const savedCart = localStorage.getItem(`cart_${currentUser.email}`);
+            if (savedCart) cart = JSON.parse(savedCart);
+            else cart = [];
+            const savedOrders = localStorage.getItem(`orders_${currentUser.email}`);
+            if (savedOrders) orderHistory = JSON.parse(savedOrders);
+            else orderHistory = [];
+            updateCartUI();
+            renderCartModal();
+        }
+
+        function saveUserData() {
+            if (!currentUser) return;
+            localStorage.setItem(`cart_${currentUser.email}`, JSON.stringify(cart));
+            localStorage.setItem(`orders_${currentUser.email}`, JSON.stringify(orderHistory));
+        }
+
+        function updateCartUI() {
+            const count = cart.reduce((acc, item) => acc + item.quantity, 0);
+            document.getElementById('cartCount').innerText = count;
+            if (currentUser) saveUserData();
+        }
+
+        function renderCartModal() {
+            const cartContainer = document.getElementById('cartItemsList');
+            if (!cartContainer) return;
+            if (cart.length === 0) {
+                cartContainer.innerHTML = '<p>Your cart is empty.</p>';
+                document.getElementById('cartTotal').innerHTML = '';
+                return;
+            }
+            let html = '';
+            let total = 0;
+            cart.forEach((item, idx) => {
+                const prod = item.product;
+                const subtotal = prod.price * item.quantity;
+                total += subtotal;
+                html += `<div class="cart-item"><div><strong>${prod.name}</strong> x${item.quantity}</div><div>$${subtotal.toFixed(2)} <button class="removeCartItem" data-idx="${idx}" style="background:transparent; border:none; color:#ef4444; margin-left:12px;"><i class="fas fa-trash"></i></button></div></div>`;
+            });
+            cartContainer.innerHTML = html;
+            document.getElementById('cartTotal').innerHTML = `Total: $${total.toFixed(2)}`;
+            document.querySelectorAll('.removeCartItem').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = parseInt(btn.getAttribute('data-idx'));
+                    cart.splice(idx, 1);
+                    updateCartUI();
+                    renderCartModal();
+                    renderProductsGrid();
+                });
+            });
+        }
+
+        function addToCart(product) {
+            if (!currentUser) {
+                alert("Please login / signup to add items to cart.");
+                return false;
+            }
+            const existing = cart.find(item => item.id === product.id);
+            if (existing) existing.quantity += 1;
+            else cart.push({ id: product.id, product: product, quantity: 1 });
+            updateCartUI();
+            renderCartModal();
+            alert(`${product.name} added to cart!`);
+            return true;
+        }
+
+        function renderProductsGrid() {
+            const grid = document.getElementById('productsGrid');
+            if (!grid) return;
+            grid.innerHTML = products.map(prod => `
+            <div class="product-card">
+                <div class="product-img">
+                    <img src="${prod.image}" alt="${prod.name}" loading="lazy">
+                </div>
+                <div class="product-title">${prod.name}</div>
+                <div class="product-price">$${prod.price.toFixed(2)}</div>
+                <button class="add-to-cart" data-id="${prod.id}">Add to Cart</button>
+            </div>
+        `).join('');
+            document.querySelectorAll('.add-to-cart').forEach(btn => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                const product = products.find(p => p.id === id);
+                btn.addEventListener('click', () => addToCart(product));
+            });
+        }
+
+        // Render order history
+        function renderOrderHistory() {
+            const container = document.getElementById('orderHistoryContainer');
+            if (!container) return;
+            if (!orderHistory.length) {
+                container.innerHTML = `<div class="empty-history"><i class="fas fa-receipt" style="font-size: 3rem; opacity: 0.5; margin-bottom: 12px; display: block;"></i>No orders yet. Start shopping! ✨</div>`;
+                return;
+            }
+            let html = '';
+            orderHistory.slice().reverse().forEach(order => {
+                const itemsSummary = order.items.map(i => `${i.product.name} x${i.quantity}`).join(', ');
+                html += `
+                <div class="order-item">
+                    <div class="order-details">
+                        <div class="order-id">Order #${order.orderId}</div>
+                        <div class="order-meta"><i class="far fa-calendar-alt"></i> ${order.date} &nbsp;|&nbsp; <i class="fas fa-truck"></i> ${order.deliveryMethod === 'standard' ? 'Standard' : 'Express'}</div>
+                        <div class="order-meta">Tracking: ${order.trackingId} | Items: ${itemsSummary.substring(0, 80)}${itemsSummary.length > 80 ? '...' : ''}</div>
+                        <div class="order-meta">Delivered to: ${order.deliveryDetails.address}, ${order.deliveryDetails.city}</div>
+                    </div>
+                    <div class="order-total">$${order.total.toFixed(2)}</div>
+                </div>
+            `;
+            });
+            container.innerHTML = html;
+        }
+
+        // Order confirmation & add to history
+        function confirmOrder() {
+            if (!currentUser) { alert("Please login."); return; }
+            const fullName = document.getElementById('fullName').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const city = document.getElementById('city').value.trim();
+            if (!fullName || !address || !city) { alert("Please fill all delivery fields."); return; }
+            if (cart.length === 0) { alert("Cart is empty."); return; }
+
+            const deliveryMethod = document.getElementById('deliveryMethod').value;
+            const trackingId = "US" + Math.floor(Math.random() * 9000000 + 1000000);
+            const totalAmount = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0) + (deliveryMethod === 'express' ? 9.99 : 0);
+
+            const newOrder = {
+                orderId: Math.floor(Date.now() / 1000),
+                date: new Date().toLocaleDateString(),
+                items: cart.map(item => ({ product: item.product, quantity: item.quantity })),
+                total: totalAmount,
+                deliveryDetails: { fullName, address, city },
+                trackingId: trackingId,
+                deliveryMethod: deliveryMethod,
+            };
+
+            orderHistory.unshift(newOrder);
+            saveUserData();
+            renderOrderHistory();
+
+            // Clear cart
+            cart = [];
+            updateCartUI();
+            renderCartModal();
+            renderProductsGrid();
+
+            // Show confirmation
+            document.getElementById('checkoutModal').style.display = 'none';
+            const confirmModal = document.getElementById('confirmationModal');
+            let methodText = deliveryMethod === 'standard' ? 'Standard (3-5 days)' : 'Express (1-2 days)';
+            document.getElementById('confirmationMsg').innerHTML = `Hi ${fullName}, your order will be shipped to ${address}, ${city} via ${methodText}.<br> Tracking ID: ${trackingId}. Thank you!`;
+            confirmModal.style.display = 'flex';
+        }
+
+        // ---------- Auth ----------
+        function showAuthDialogue(type) {
+            const email = prompt(`${type === 'login' ? 'Login' : 'Sign up'} \nEnter email:`);
+            if (!email) return;
+            const name = type === 'signup' ? prompt('Enter your name:') : email.split('@')[0];
+            if (type === 'signup' && !name) return;
+            currentUser = { email: email, name: name || email.split('@')[0] };
+            loadUserData();
+            updateAuthUI();
+            renderProductsGrid();
+            renderOrderHistory();
+            alert(`Welcome ${currentUser.name}!`);
+        }
+
+        function logout() {
+            if (currentUser) saveUserData();
+            currentUser = null;
+            cart = [];
+            orderHistory = [];
+            updateCartUI();
+            renderCartModal();
+            updateAuthUI();
+            renderProductsGrid();
+            renderOrderHistory();
+            alert("Logged out.");
+        }
+
+        function updateAuthUI() {
+            const authSection = document.getElementById('authSection');
+            const userSection = document.getElementById('userInfoSection');
+            if (currentUser) {
+                authSection.style.display = 'none';
+                userSection.style.display = 'flex';
+                document.getElementById('userNameDisplay').innerHTML = `<i class="fas fa-user"></i> ${currentUser.name}`;
+            } else {
+                authSection.style.display = 'flex';
+                userSection.style.display = 'none';
+            }
+            // also refresh UI sections if needed
+        }
+
+        // UI Toggle: Shop vs Order History
+        function showShop() {
+            document.getElementById('shopSection').style.display = 'block';
+            document.getElementById('ordersSection').style.display = 'none';
+            document.getElementById('shopLink').classList.add('active');
+            document.getElementById('ordersLink').classList.remove('active');
+            renderProductsGrid();
+        }
+
+        function showOrders() {
+            if (!currentUser) {
+                alert("Please login to view your order history.");
+                showShop();
+                return;
+            }
+            document.getElementById('shopSection').style.display = 'none';
+            document.getElementById('ordersSection').style.display = 'block';
+            document.getElementById('ordersLink').classList.add('active');
+            document.getElementById('shopLink').classList.remove('active');
+            renderOrderHistory();
+        }
+
+        // AI assistant
+        function aiResponse(userMsg) {
+            const lower = userMsg.toLowerCase();
+            if (lower.includes('shoe') || lower.includes('sneaker')) return "🔥 Our Leather Sneakers ($119) & Running Shoes ($89) — perfect style & comfort!";
+            if (lower.includes('hoodie')) return "Cozy Hoodie Fleece is trending! Pair with Slim Jeans. Only $69.99.";
+            if (lower.includes('jean')) return "Slim Fit Jeans at $59.99 — stretch denim, modern fit.";
+            if (lower.includes('order') || lower.includes('history')) return "Go to 'Order History' tab after login to see all your past purchases and tracking IDs.";
+            if (lower.includes('checkout')) return "Add items to cart → click cart → proceed to checkout → fill address → confirm order.";
+            return "Ask me about sneakers, hoodies, orders, or delivery!";
+        }
+
+        function sendAiMessage() {
+            const input = document.getElementById('aiInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+            const msgContainer = document.getElementById('aiMessages');
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user-msg';
+            userDiv.innerText = msg;
+            msgContainer.appendChild(userDiv);
+            input.value = '';
+            setTimeout(() => {
+                const reply = aiResponse(msg);
+                const botDiv = document.createElement('div');
+                botDiv.className = 'message bot-msg';
+                botDiv.innerText = reply;
+                msgContainer.appendChild(botDiv);
+                msgContainer.scrollTop = msgContainer.scrollHeight;
+            }, 150);
+            msgContainer.scrollTop = msgContainer.scrollHeight;
+        }
+
+        // Modal & Event Handlers
+        function initModals() {
+            const cartModal = document.getElementById('cartModal');
+            const checkoutModal = document.getElementById('checkoutModal');
+            const confirmModal = document.getElementById('confirmationModal');
+            document.getElementById('cartIconBtn').onclick = () => { renderCartModal(); cartModal.style.display = 'flex'; };
+            document.getElementById('closeCartBtn').onclick = () => cartModal.style.display = 'none';
+            document.getElementById('proceedCheckoutBtn').onclick = () => { cartModal.style.display = 'none'; openCheckoutFlow(); };
+            document.getElementById('closeCheckoutBtn').onclick = () => checkoutModal.style.display = 'none';
+            document.getElementById('confirmDeliveryBtn').onclick = () => confirmOrder();
+            document.getElementById('closeConfirmBtn').onclick = () => confirmModal.style.display = 'none';
+            window.onclick = (e) => {
+                if (e.target === cartModal) cartModal.style.display = 'none';
+                if (e.target === checkoutModal) checkoutModal.style.display = 'none';
+                if (e.target === confirmModal) confirmModal.style.display = 'none';
+            };
+        }
+
+        function openCheckoutFlow() {
+            if (!currentUser) { alert("Login to checkout."); return; }
+            if (cart.length === 0) { alert("Cart empty."); return; }
+            document.getElementById('checkoutModal').style.display = 'flex';
+        }
+
+        function initAuthButtons() {
+            document.getElementById('loginBtn').onclick = () => showAuthDialogue('login');
+            document.getElementById('signupBtn').onclick = () => showAuthDialogue('signup');
+            document.getElementById('logoutBtn').onclick = () => logout();
+        }
+
+        function initAi() {
+            const aiToggle = document.getElementById('aiToggleBtn');
+            const aiWin = document.getElementById('aiChatWindow');
+            aiToggle.onclick = () => { aiWin.style.display = aiWin.style.display === 'flex' ? 'none' : 'flex'; };
+            document.getElementById('sendAiMsg').onclick = sendAiMessage;
+            document.getElementById('aiInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendAiMessage(); });
+        }
+
+        // Navigation & Initialization
+        document.getElementById('shopLink').addEventListener('click', showShop);
+        document.getElementById('ordersLink').addEventListener('click', showOrders);
+
+        function init() {
+            renderProductsGrid();
+            initModals();
+            initAuthButtons();
+            initAi();
+            updateAuthUI();
+            updateCartUI();
+            renderCartModal();
+            showShop();
+            if (currentUser) renderOrderHistory();
+        }
+        init();
+    </script>
+</body>
+
+</html>
