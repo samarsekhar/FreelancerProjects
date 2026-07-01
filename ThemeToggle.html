@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Theme Toggle Example</title>
+  <style>
+    :root {
+      --bg: #f5f2ec;
+      --ink: #1f1c18;
+      --card: #ffffff;
+      --line: #e2ddd2;
+      --accent: #d1913c;
+    }
+
+    html.dark {
+      --bg: #14120f;
+      --ink: #f0ece3;
+      --card: #1f1c17;
+      --line: #34302a;
+      --accent: #e6b566;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: system-ui, sans-serif;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 2rem;
+      width: min(360px, 88vw);
+      text-align: center;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    h1 {
+      font-size: 1.2rem;
+      margin-top: 0;
+    }
+
+    p {
+      color: color-mix(in srgb, var(--ink) 65%, transparent);
+      line-height: 1.5;
+      font-size: 0.92rem;
+    }
+
+    .switch {
+      margin: 1.5rem auto 0;
+      width: 60px;
+      height: 32px;
+      border-radius: 999px;
+      background: var(--line);
+      border: none;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--accent);
+      transition: transform 0.3s ease;
+    }
+
+    html.dark .knob {
+      transform: translateX(28px);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>Appearance</h1>
+    <p>Toggle between light and dark. The preference is stored only in memory for this demo.</p>
+    <button class="switch" id="toggle" aria-label="Toggle dark mode">
+      <span class="knob"></span>
+    </button>
+  </div>
+
+  <script>
+    const toggle = document.getElementById('toggle');
+    toggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+    });
+  </script>
+</body>
+
+</html>
