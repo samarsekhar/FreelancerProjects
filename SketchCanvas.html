@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sketch Canvas Example</title>
+    <!-- Sketch canvas – freehand drawing with color/size controls -->
+    <style>
+        :root {
+            --ink: #1c1e24;
+            --bg: #f2f3f7;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.9rem;
+            background: var(--bg);
+            font-family: system-ui, sans-serif;
+            color: var(--ink);
+        }
+
+        canvas {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            touch-action: none;
+            cursor: crosshair;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .swatches {
+            display: flex;
+            gap: 6px;
+        }
+
+        .swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .swatch.active {
+            border-color: #1c1e24;
+        }
+
+        input[type="range"] {
+            width: 90px;
+        }
+
+        button.clear {
+            background: #1c1e24;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="480" height="320"></canvas>
+    <div class="toolbar">
+        <div class="swatches" id="swatches"></div>
+        <input type="range" id="size" min="1" max="20" value="4">
+        <button class="clear" id="clearBtn">Clear</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const colors = ['#1c1e24', '#e0453e', '#3a5bfd', '#1a9e6b', '#e0913e', '#a83ec9'];
+        let color = colors[0];
+        let size = 4;
+        let drawing = false;
+
+        const swatchWrap = document.getElementById('swatches');
+        colors.forEach((c, i) => {
+            const sw = document.createElement('div');
+            sw.className = 'swatch' + (i === 0 ? ' active' : '');
+            sw.style.background = c;
+            sw.addEventListener('click', () => {
+                color = c;
+                document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+                sw.classList.add('active');
+            });
+            swatchWrap.appendChild(sw);
+        });
+
+        document.getElementById('size').addEventListener('input', e => size = Number(e.target.value));
+        document.getElementById('clearBtn').addEventListener('click', () => ctx.clearRect(0, 0, canvas.width, canvas.height));
+
+        function pos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const point = e.touches ? e.touches[0] : e;
+            return { x: point.clientX - rect.left, y: point.clientY - rect.top };
+        }
+
+        function start(e) {
+            drawing = true;
+            const p = pos(e);
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+        }
+        function move(e) {
+            if (!drawing) return;
+            e.preventDefault();
+            const p = pos(e);
+            ctx.lineTo(p.x, p.y);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = size;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+        }
+        function end() { drawing = false; }
+
+        canvas.addEventListener('mousedown', start);
+        canvas.addEventListener('mousemove', move);
+        window.addEventListener('mouseup', end);
+        canvas.addEventListener('touchstart', start);
+        canvas.addEventListener('touchmove', move);
+        canvas.addEventListener('touchend', end);
+    </script>
+</body>
+
+</html>
