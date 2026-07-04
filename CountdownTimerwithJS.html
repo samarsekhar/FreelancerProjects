@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+
+    <!-- <link rel="stylesheet" href="style.css"> -->
+  <style>
+    *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
+}
+
+body{
+
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+}
+
+.container{
+
+    text-align:center;
+    color:white;
+}
+
+.container h1{
+
+    font-size:50px;
+    margin-bottom:40px;
+    letter-spacing:2px;
+}
+
+.timer{
+
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.box{
+
+    width:130px;
+    height:150px;
+
+    background:rgba(255,255,255,.1);
+    backdrop-filter:blur(12px);
+
+    border-radius:20px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    border:1px solid rgba(255,255,255,.2);
+
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+
+    transition:.4s;
+}
+
+.box:hover{
+
+    transform:translateY(-10px) scale(1.05);
+
+    background:rgba(255,255,255,.18);
+}
+
+.box span{
+
+    font-size:55px;
+    font-weight:bold;
+}
+
+.box p{
+
+    margin-top:10px;
+    font-size:18px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+}
+
+#message{
+
+    margin-top:35px;
+    font-size:32px;
+    color:#00ff88;
+    animation:blink .8s infinite;
+}
+
+@keyframes blink{
+
+    50%{
+        opacity:.4;
+    }
+}
+
+@media(max-width:650px){
+
+.container h1{
+
+    font-size:34px;
+}
+
+.box{
+
+    width:100px;
+    height:120px;
+}
+
+.box span{
+
+    font-size:42px;
+}
+
+.box p{
+
+    font-size:15px;
+}
+
+}
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Countdown Timer</h1>
+
+    <div class="timer">
+
+        <div class="box">
+            <span id="days">00</span>
+            <p>Days</p>
+        </div>
+
+        <div class="box">
+            <span id="hours">00</span>
+            <p>Hours</p>
+        </div>
+
+        <div class="box">
+            <span id="minutes">00</span>
+            <p>Minutes</p>
+        </div>
+
+        <div class="box">
+            <span id="seconds">00</span>
+            <p>Seconds</p>
+        </div>
+
+    </div>
+
+    <h2 id="message"></h2>
+
+</div>
+
+<!-- <script src="script.js"></script> -->
+  <script>
+    // Set your target date here
+const targetDate = new Date("January 1, 2027 00:00:00").getTime();
+
+const daysEl = document.getElementById("days");
+const hoursEl = document.getElementById("hours");
+const minutesEl = document.getElementById("minutes");
+const secondsEl = document.getElementById("seconds");
+const message = document.getElementById("message");
+
+const timer = setInterval(() => {
+
+    const now = new Date().getTime();
+
+    const distance = targetDate - now;
+
+    if(distance <= 0){
+
+        clearInterval(timer);
+
+        daysEl.innerHTML = "00";
+        hoursEl.innerHTML = "00";
+        minutesEl.innerHTML = "00";
+        secondsEl.innerHTML = "00";
+
+        message.innerHTML = "🎉 Time's Up!";
+
+        return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+
+    const hours = Math.floor(
+        (distance % (1000 * 60 * 60 * 24)) /
+        (1000 * 60 * 60)
+    );
+
+    const minutes = Math.floor(
+        (distance % (1000 * 60 * 60)) /
+        (1000 * 60)
+    );
+
+    const seconds = Math.floor(
+        (distance % (1000 * 60)) /
+        1000
+    );
+
+    daysEl.innerHTML = String(days).padStart(2,"0");
+    hoursEl.innerHTML = String(hours).padStart(2,"0");
+    minutesEl.innerHTML = String(minutes).padStart(2,"0");
+    secondsEl.innerHTML = String(seconds).padStart(2,"0");
+
+},1000);
+  </script>
+
+</body>
+</html>
