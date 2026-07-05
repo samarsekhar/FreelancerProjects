@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whispered Hover Effect</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+  <style>
+    /* Google Font */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    background:#070b14;
+    overflow:hidden;
+}
+
+.container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* Card */
+
+.card{
+    position:relative;
+    width:360px;
+    height:450px;
+    border-radius:25px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(10px);
+    overflow:hidden;
+    cursor:pointer;
+    transition:.6s;
+}
+
+/* Glow */
+
+.card .glow{
+    position:absolute;
+    width:180px;
+    height:180px;
+    background:linear-gradient(
+    45deg,
+    #00f5ff,
+    #00ff88,
+    #7b61ff,
+    #ff00d4
+    );
+    border-radius:50%;
+    filter:blur(70px);
+    opacity:.25;
+    top:-60px;
+    left:-60px;
+    transition:1s;
+}
+
+/* Content */
+
+.content{
+    position:relative;
+    z-index:2;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+    text-align:center;
+    transition:.6s;
+}
+
+.content h2{
+    color:#fff;
+    font-size:42px;
+    letter-spacing:2px;
+    margin-bottom:20px;
+    transition:.5s;
+}
+
+.content p{
+    color:#d6d6d6;
+    line-height:1.8;
+    margin-bottom:35px;
+    opacity:.75;
+    transition:.5s;
+}
+
+/* Button */
+
+button{
+    padding:15px 45px;
+    border:none;
+    border-radius:50px;
+    color:#fff;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.2);
+    backdrop-filter:blur(20px);
+    cursor:pointer;
+    transition:.4s;
+    font-size:16px;
+    letter-spacing:1px;
+}
+
+button:hover{
+    background:#00f5ff;
+    color:#000;
+    box-shadow:
+    0 0 20px #00f5ff,
+    0 0 50px #00f5ff;
+}
+
+/* Whisper Hover */
+
+.card:hover{
+    transform:translateY(-12px) scale(1.03);
+    box-shadow:
+    0 15px 50px rgba(0,255,255,.18);
+}
+
+.card:hover .glow{
+    left:180px;
+    top:220px;
+    transform:scale(1.8);
+    opacity:.7;
+}
+
+.card:hover h2{
+    letter-spacing:5px;
+    text-shadow:
+    0 0 10px #00f5ff,
+    0 0 30px #00f5ff;
+}
+
+.card:hover p{
+    opacity:1;
+    transform:translateY(-3px);
+}
+
+/* Animated Border */
+
+.card::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    border-radius:25px;
+    padding:1px;
+    background:linear-gradient(
+    135deg,
+    transparent,
+    rgba(255,255,255,.6),
+    transparent
+    );
+    -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+            mask-composite:exclude;
+    opacity:0;
+    transition:.6s;
+}
+
+.card:hover::before{
+    opacity:1;
+}
+
+/* Floating Animation */
+
+.card{
+    animation:float 5s ease-in-out infinite;
+}
+
+@keyframes float{
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-8px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+
+}
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="card">
+        <span class="glow"></span>
+
+        <div class="content">
+            <h2>Whisper</h2>
+            <p>
+                Elegant CSS hover animation with soft glowing light,
+                blurred borders and smooth floating transitions.
+            </p>
+
+            <button>Explore</button>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
