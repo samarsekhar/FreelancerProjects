@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Flexbox Guide</title>
+    <style>
+        :root {
+            --grow-1: 1;
+            --shrink-1: 1;
+            --basis-1: 100px;
+            --grow-2: 1;
+            --shrink-2: 1;
+            --basis-2: 100px;
+            --grow-3: 1;
+            --shrink-3: 1;
+            --basis-3: 100px;
+        }
+
+        body {
+            background-color: khaki;
+            font-family: system-ui;
+            padding: 2rem;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .container {
+            border: 2px solid black;
+            border-radius: 12px;
+            display: flex;
+            gap: 1rem;
+            height: 30vh;
+            padding: 1rem;
+        }
+
+        .item {
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 1rem;
+        }
+
+        .item:nth-child(1) {
+            background-color: #e74c3c;
+            flex-grow: var(--grow-1);
+            flex-shrink: var(--shrink-1);
+            flex-basis: var(--basis-1);
+        }
+
+        .item:nth-child(2) {
+            background-color: #2ecc71;
+            flex-grow: var(--grow-2);
+            flex-shrink: var(--shrink-2);
+            flex-basis: var(--basis-2);
+        }
+
+        .item:nth-child(3) {
+            background-color: #f39c12;
+            flex-grow: var(--grow-3);
+            flex-shrink: var(--shrink-3);
+            flex-basis: var(--basis-3);
+        }
+
+        slide-vars {
+            left: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="item">Item 1</div>
+        <div class="item">Item 2</div>
+        <div class="item">Item 3</div>
+    </div>
+
+    <slide-vars></slide-vars>
+
+    <script>
+        import { slideVars } from "https://esm.sh/@codepen/slidevars";
+
+        slideVars.init(
+            {
+                "Item 1": {
+                    "--grow-1": {
+                        type: "slider",
+                        min: 0,
+                        max: 5,
+                        default: 1,
+                        unit: ""
+                    },
+                    "--shrink-1": {
+                        type: "slider",
+                        min: 0,
+                        max: 5,
+                        default: 1,
+                        unit: ""
+                    },
+                    "--basis-1": {
+                        type: "slider",
+                        min: 50,
+                        max: 300,
+                        default: 100,
+                        unit: "px"
+                    }
+                },
+                "Item 2": {
+                    "--grow-2": {
+                        type: "slider",
+                        min: 0,
+                        max: 5,
+                        default: 1,
+                        unit: ""
+                    },
+                    "--shrink-2": {
+                        type: "slider",
+                        min: 0,
+                        max: 5,
+                        default: 1,
+                        unit: ""
+                    },
+                    "--basis-2": {
+                        type: "slider",
+                        min: 50,
+                        max: 300,
+                        default: 100,
+                        unit: "px"
+                    }
+                },
+                "Item 3": {
+                    "--grow-3": {
+                        type: "slider",
+                        min: 0,
+                        max: 5,
+                        default: 1,
+                        unit: ""
+                    },
+                    "--shrink-3": {
+                        type: "slider",
+                        min: 0,
+                        max: 5,
+                        default: 1,
+                        unit: ""
+                    },
+                    "--basis-3": {
+                        type: "slider",
+                        min: 50,
+                        max: 300,
+                        default: 100,
+                        unit: "px"
+                    }
+                }
+            },
+            { defaultOpen: false }
+        );
+    </script>
+</body>
+
+</html>
