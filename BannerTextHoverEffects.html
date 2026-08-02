@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner Hover Effects</title>
+  <!-- Creative Banner Hover Effects using CSS & Javascript -->
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .banner {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: #2c2f40;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .banner::before {
+            content: attr(data-text);
+            position: absolute;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 12em;
+            color: transparent;
+            -webkit-text-stroke: 1px #fff;
+            z-index: 1;
+        }
+
+        .banner::after {
+            content: attr(data-text);
+            position: absolute;
+            inset: 0;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 12em;
+            color: #fff;
+            -webkit-text-stroke: 1px #fff;
+            z-index: 2;
+            clip-path: circle(0px at var(--x) var(--y));
+            transition: clip-path 0.1;
+            background: url(./bg.jpg);
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .banner:hover::after {
+            clip-path: circle(200px at var(--x) var(--y));
+        }
+    </style>
+</head>
+
+<body>
+    <div class="banner" data-text="Creative"></div>
+
+    <script>
+        let banner = document.querySelector(".banner");
+        banner.onmousemove = function (e) {
+            let x = e.pageX - banner.offsetLeft;
+            let y = e.pageY - banner.offsetTop;
+            banner.style.setProperty("--x", x + "px");
+            banner.style.setProperty("--y", y + "px");
+        }
+    </script>
+</body>
+
+</html>
