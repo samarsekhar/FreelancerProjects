@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Spider-Man Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #121212;
+        }
+
+        .card {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            background: url(./bg-spiderwave.png);
+            background-position: center;
+            background-size: cover;
+            border-radius: 15px;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .card .img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            transform: translate(-50%, -50%) translateZ(175px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <img src="./Marvels-Spider-Man-Download-Free-PNG.png" alt="Spider-Man" class="img">
+    </div>
+
+    <script>
+        let card = document.querySelector(".card");
+        card.addEventListener("mousemove", (e) => {
+            let rect = card.getBoundingClientRect();
+            let x = e.clientX - rect.left - rect.width / 2;
+            let y = e.clientY - rect.top - rect.height / 2;
+
+            let rotateX = (x / rect.height) * -30;
+            let rotateY = (y / rect.width) * -30;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+            let bgX = (x / rect.width) * 50 + 50;
+            card.style.backgroundPositionX = `${bgX}%`;
+        })
+
+        card.addEventListener("mouseleave", () => {
+            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+            card.style.backgroundPositionX = ""
+        })
+    </script>
+</body>
+
+</html>
