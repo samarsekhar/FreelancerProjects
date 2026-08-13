@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>3D Tilt Parallax Card</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background:
+        radial-gradient(circle at top, #172554, #020617 55%);
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    /* Card wrapper */
+    .card-wrapper {
+      perspective: 1200px;
+    }
+
+    /* Main card */
+    .card {
+      position: relative;
+      width: 350px;
+      height: 470px;
+      border-radius: 25px;
+      overflow: hidden;
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,0.15),
+          rgba(255,255,255,0.03)
+        );
+
+      border: 1px solid rgba(255,255,255,0.2);
+
+      box-shadow:
+        0 30px 70px rgba(0,0,0,0.5),
+        inset 0 0 30px rgba(255,255,255,0.04);
+
+      transform-style: preserve-3d;
+
+      transition:
+        transform 0.15s ease-out,
+        box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      box-shadow:
+        0 45px 100px rgba(0,0,0,0.65),
+        0 0 40px rgba(56,189,248,0.15);
+    }
+
+    /* Mouse spotlight */
+    .spotlight {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+
+      left: var(--mouse-x);
+      top: var(--mouse-y);
+
+      transform: translate(-50%, -50%);
+
+      background: radial-gradient(
+        circle,
+        rgba(255,255,255,0.25),
+        transparent 65%
+      );
+
+      pointer-events: none;
+      z-index: 10;
+      filter: blur(10px);
+    }
+
+    /* Decorative glow */
+    .glow {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+
+      background: #38bdf8;
+      border-radius: 50%;
+
+      filter: blur(80px);
+      opacity: 0.35;
+
+      top: -50px;
+      right: -50px;
+
+      transform: translateZ(20px);
+    }
+
+    .glow2 {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+
+      background: #a855f7;
+      border-radius: 50%;
+
+      filter: blur(80px);
+      opacity: 0.3;
+
+      bottom: -50px;
+      left: -50px;
+
+      transform: translateZ(20px);
+    }
+
+    /* Floating circle */
+    .circle {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+
+      border-radius: 50%;
+
+      border: 1px solid rgba(255,255,255,0.2);
+
+      background: rgba(255,255,255,0.04);
+
+      top: 50px;
+      right: -30px;
+
+      transform: translateZ(80px);
+
+      box-shadow:
+        inset 0 0 30px rgba(255,255,255,0.08);
+    }
+
+    /* Content */
+    .content {
+      position: relative;
+      z-index: 5;
+
+      height: 100%;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      padding: 35px;
+
+      transform-style: preserve-3d;
+    }
+
+    /* Top badge */
+    .badge {
+      display: inline-block;
+
+      width: fit-content;
+
+      padding: 8px 14px;
+
+      border-radius: 50px;
+
+      background: rgba(255,255,255,0.08);
+
+      border: 1px solid rgba(255,255,255,0.15);
+
+      color: #7dd3fc;
+
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+
+      transform: translateZ(90px);
+    }
+
+    /* Main title */
+    h1 {
+      margin-top: 80px;
+
+      font-size: 48px;
+      line-height: 1;
+
+      color: white;
+
+      text-shadow:
+        0 10px 25px rgba(0,0,0,0.4);
+
+      transform: translateZ(110px);
+    }
+
+    h1 span {
+      color: #38bdf8;
+    }
+
+    /* Description */
+    p {
+      margin-top: 20px;
+
+      color: rgba(255,255,255,0.65);
+
+      font-size: 14px;
+
+      line-height: 1.7;
+
+      transform: translateZ(70px);
+    }
+
+    /* Bottom section */
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      transform: translateZ(100px);
+    }
+
+    .price {
+      color: white;
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .price small {
+      color: rgba(255,255,255,0.5);
+      font-size: 12px;
+      font-weight: normal;
+    }
+
+    /* Button */
+    .btn {
+      padding: 12px 20px;
+
+      border-radius: 50px;
+
+      color: white;
+      text-decoration: none;
+
+      background: linear-gradient(
+        135deg,
+        #0ea5e9,
+        #6366f1
+      );
+
+      box-shadow:
+        0 10px 25px rgba(14,165,233,0.3);
+
+      font-size: 13px;
+      font-weight: bold;
+
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 15px 30px rgba(14,165,233,0.45);
+    }
+
+    /* Shine effect */
+    .shine {
+      position: absolute;
+      inset: 0;
+
+      background:
+        linear-gradient(
+          120deg,
+          transparent 30%,
+          rgba(255,255,255,0.12),
+          transparent 70%
+        );
+
+      transform: translateX(-100%);
+
+      transition: transform 0.8s ease;
+
+      pointer-events: none;
+
+      z-index: 20;
+    }
+
+    .card:hover .shine {
+      transform: translateX(100%);
+    }
+
+    /* Responsive */
+    @media (max-width: 500px) {
+      .card {
+        width: 300px;
+        height: 420px;
+      }
+
+      h1 {
+        font-size: 40px;
+      }
+
+      .content {
+        padding: 28px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card-wrapper">
+
+    <div class="card" id="card">
+
+      <!-- Effects -->
+      <div class="spotlight"></div>
+
+      <div class="glow"></div>
+      <div class="glow2"></div>
+
+      <div class="circle"></div>
+
+      <div class="shine"></div>
+
+      <!-- Content -->
+      <div class="content">
+
+        <div>
+          <div class="badge">
+            3D EXPERIENCE
+          </div>
+
+          <h1>
+            Magic<br>
+            <span>Card</span>
+          </h1>
+
+          <p>
+            Move your mouse around the card
+            and experience a smooth 3D
+            parallax effect.
+          </p>
+        </div>
+
+        <div class="bottom">
+
+          <div class="price">
+            $49
+            <small>/project</small>
+          </div>
+
+          <a href="#" class="btn">
+            Explore →
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+    const card = document.getElementById("card");
+
+    card.addEventListener("mousemove", (event) => {
+
+      const rect = card.getBoundingClientRect();
+
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      // Tilt amount
+      const rotateX =
+        ((y - centerY) / centerY) * -12;
+
+      const rotateY =
+        ((x - centerX) / centerX) * 12;
+
+      card.style.transform = `
+        rotateX(${rotateX}deg)
+        rotateY(${rotateY}deg)
+        scale(1.04)
+      `;
+
+      // Spotlight position
+      card.style.setProperty(
+        "--mouse-x",
+        `${x}px`
+      );
+
+      card.style.setProperty(
+        "--mouse-y",
+        `${y}px`
+      );
+    });
+
+
+    card.addEventListener("mouseleave", () => {
+
+      card.style.transform =
+        "rotateX(0deg) rotateY(0deg) scale(1)";
+
+      card.style.setProperty(
+        "--mouse-x",
+        "50%"
+      );
+
+      card.style.setProperty(
+        "--mouse-y",
+        "50%"
+      );
+    });
+  </script>
+
+</body>
+</html>
