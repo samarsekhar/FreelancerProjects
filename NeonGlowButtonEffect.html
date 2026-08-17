@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neon Glow Button Effect</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #121212;
+        margin: 0;
+      }
+      .neon-button {
+        font-size: 20px;
+        padding: 15px 30px;
+        border: 2px solid #0ff;
+        background: transparent;
+        /* color: #0ff; */
+        font-weight: bold;
+        text-transform: uppercase;
+        border-radius: 5px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        transition: 0.3s ease;
+        box-shadow: 0 0 10px #0ff, 0 0 40px #0ff;
+      }
+      .neon-button:hover {
+        background: red;
+        color: #121212;
+        box-shadow: 0 0 20px #0ff, 0 0 50px #0ff, 0 0 100px #0ff;
+      }
+      .neon-button::before {
+        content: "";
+        position: absolute;
+        width: 400%;
+        height: 400%;
+        top: -200%;
+        left: -200%;
+        background: linear-gradient(
+          45deg,
+          #ff0000,
+          #ff7300,
+          #ffeb00,
+          #00ff00,
+          #00ffee,
+          #0000ff,
+          #aa00ff,
+          #ff007b
+        );
+        z-index: -1;
+        transition: 0.5s ease-in-out;
+        animation: neon-animation 5s linear infinite;
+      }
+      @keyframes neon-animation {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="neon-button">Click Me</button>
+  </body>
+</html>
