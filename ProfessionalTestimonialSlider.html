@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Professional Testimonial Slider</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 15px;
+      background:
+        radial-gradient(circle at top left, #312e81, transparent 35%),
+        radial-gradient(circle at bottom right, #0e7490, transparent 35%),
+        #0f172a;
+      color: #fff;
+    }
+
+    .testimonial-section {
+      width: 100%;
+      max-width: 1000px;
+      text-align: center;
+    }
+
+    .section-label {
+      display: inline-block;
+      padding: 8px 16px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #67e8f9;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .testimonial-section h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      margin-bottom: 12px;
+    }
+
+    .section-description {
+      max-width: 600px;
+      margin: 0 auto 45px;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+
+    /* Slider */
+
+    .slider {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 28px;
+    }
+
+    .slides {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    .slide {
+      min-width: 100%;
+      padding: 5px;
+    }
+
+    .testimonial-card {
+      position: relative;
+      max-width: 850px;
+      margin: auto;
+      padding: 55px 70px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.3),
+        inset 0 1px rgba(255, 255, 255, 0.1);
+    }
+
+    .quote-icon {
+      font-size: 70px;
+      line-height: 1;
+      color: #22d3ee;
+      opacity: 0.35;
+      font-family: Georgia, serif;
+      margin-bottom: -5px;
+    }
+
+    .stars {
+      color: #fbbf24;
+      font-size: 20px;
+      letter-spacing: 4px;
+      margin-bottom: 25px;
+    }
+
+    .testimonial-text {
+      font-size: 20px;
+      line-height: 1.8;
+      color: #e2e8f0;
+      margin-bottom: 35px;
+    }
+
+    .customer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .customer img {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(34, 211, 238, 0.7);
+    }
+
+    .customer-info {
+      text-align: left;
+    }
+
+    .customer-info h3 {
+      font-size: 17px;
+      margin-bottom: 5px;
+    }
+
+    .customer-info p {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    /* Navigation */
+
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s ease;
+      z-index: 10;
+    }
+
+    .nav-button:hover {
+      background: #22d3ee;
+      color: #0f172a;
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 0 25px rgba(34, 211, 238, 0.4);
+    }
+
+    .prev {
+      left: 10px;
+    }
+
+    .next {
+      right: 10px;
+    }
+
+    /* Dots */
+
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border: none;
+      border-radius: 50%;
+      background: #475569;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .dot.active {
+      width: 30px;
+      border-radius: 20px;
+      background: #22d3ee;
+      box-shadow: 0 0 15px rgba(34, 211, 238, 0.5);
+    }
+
+    /* Counter */
+
+    .counter {
+      margin-top: 18px;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 768px) {
+      .testimonial-card {
+        padding: 40px 45px;
+      }
+
+      .testimonial-text {
+        font-size: 17px;
+      }
+
+      .nav-button {
+        width: 42px;
+        height: 42px;
+        font-size: 18px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 20px 10px;
+      }
+
+      .testimonial-card {
+        padding: 35px 25px;
+      }
+
+      .section-description {
+        font-size: 14px;
+      }
+
+      .testimonial-text {
+        font-size: 16px;
+        line-height: 1.7;
+      }
+
+      .quote-icon {
+        font-size: 55px;
+      }
+
+      .prev {
+        left: 5px;
+      }
+
+      .next {
+        right: 5px;
+      }
+
+      .customer img {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <section class="testimonial-section">
+
+    <span class="section-label">Testimonials</span>
+
+    <h1>What Our Customers Say</h1>
+
+    <p class="section-description">
+      Discover why developers, designers, and businesses love
+      working with our products and services.
+    </p>
+
+    <div class="slider" id="slider">
+
+      <div class="slides" id="slides">
+
+        <!-- Testimonial 1 -->
+        <div class="slide">
+          <div class="testimonial-card">
+
+            <div class="quote-icon">“</div>
+
+            <div class="stars">
+              ★★★★★
+            </div>
+
+            <p class="testimonial-text">
+              "This platform completely changed the way I manage my
+              projects. The interface is beautiful, fast, and incredibly
+              easy to use. I highly recommend it to every developer."
+            </p>
+
+            <div class="customer">
+
+              <img
+                src="https://i.pravatar.cc/150?img=12"
+                alt="Sarah Johnson"
+              />
+
+              <div class="customer-info">
+                <h3>Sarah Johnson</h3>
+                <p>Product Designer</p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+
+        <!-- Testimonial 2 -->
+        <div class="slide">
+          <div class="testimonial-card">
+
+            <div class="quote-icon">“</div>
+
+            <div class="stars">
+              ★★★★★
+            </div>
+
+            <p class="testimonial-text">
+              "The experience has been fantastic from day one.
+              Everything feels polished and professional. Our team's
+              productivity has improved significantly."
+            </p>
+
+            <div class="customer">
+
+              <img
+                src="https://i.pravatar.cc/150?img=33"
+                alt="Michael Brown"
+              />
+
+              <div class="customer-info">
+                <h3>Michael Brown</h3>
+                <p>Software Engineer</p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+
+        <!-- Testimonial 3 -->
+        <div class="slide">
+          <div class="testimonial-card">
+
+            <div class="quote-icon">“</div>
+
+            <div class="stars">
+              ★★★★★
+            </div>
+
+            <p class="testimonial-text">
+              "One of the best tools I have used in recent years.
+              The design is modern, the performance is excellent,
+              and the overall user experience is outstanding."
+            </p>
+
+            <div class="customer">
+
+              <img
+                src="https://i.pravatar.cc/150?img=47"
+                alt="Emily Davis"
+              />
+
+              <div class="customer-info">
+                <h3>Emily Davis</h3>
+                <p>Startup Founder</p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+
+        <!-- Testimonial 4 -->
+        <div class="slide">
+          <div class="testimonial-card">
+
+            <div class="quote-icon">“</div>
+
+            <div class="stars">
+              ★★★★★
+            </div>
+
+            <p class="testimonial-text">
+              "Amazing attention to detail. The responsive design works
+              perfectly across desktop, tablet, and mobile. Definitely
+              one of my favorite tools."
+            </p>
+
+            <div class="customer">
+
+              <img
+                src="https://i.pravatar.cc/150?img=68"
+                alt="David Wilson"
+              />
+
+              <div class="customer-info">
+                <h3>David Wilson</h3>
+                <p>Frontend Developer</p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- Previous Button -->
+      <button
+        class="nav-button prev"
+        id="prevBtn"
+        aria-label="Previous testimonial"
+      >
+        &#10094;
+      </button>
+
+
+      <!-- Next Button -->
+      <button
+        class="nav-button next"
+        id="nextBtn"
+        aria-label="Next testimonial"
+      >
+        &#10095;
+      </button>
+
+    </div>
+
+
+    <!-- Dots -->
+    <div class="dots" id="dots"></div>
+
+    <!-- Counter -->
+    <div class="counter">
+      <span id="currentSlide">01</span>
+      /
+      <span id="totalSlides">04</span>
+    </div>
+
+  </section>
+
+
+  <script>
+
+    const slides = document.getElementById("slides");
+    const slideItems = document.querySelectorAll(".slide");
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const dotsContainer = document.getElementById("dots");
+
+    const currentSlideText =
+      document.getElementById("currentSlide");
+
+    const totalSlidesText =
+      document.getElementById("totalSlides");
+
+    const slider =
+      document.getElementById("slider");
+
+
+    let currentIndex = 0;
+
+    const totalSlides = slideItems.length;
+
+    let autoSlide;
+
+
+    // Total slides
+    totalSlidesText.textContent =
+      String(totalSlides).padStart(2, "0");
+
+
+    // Create dots
+    slideItems.forEach((_, index) => {
+
+      const dot = document.createElement("button");
+
+      dot.classList.add("dot");
+
+      dot.setAttribute(
+        "aria-label",
+        `Go to testimonial ${index + 1}`
+      );
+
+      dot.addEventListener("click", () => {
+
+        currentIndex = index;
+
+        updateSlider();
+
+        restartAutoSlide();
+
+      });
+
+      dotsContainer.appendChild(dot);
+
+    });
+
+
+    const dots =
+      document.querySelectorAll(".dot");
+
+
+    // Update slider
+    function updateSlider() {
+
+      slides.style.transform =
+        `translateX(-${currentIndex * 100}%)`;
+
+
+      // Active dot
+      dots.forEach((dot, index) => {
+
+        dot.classList.toggle(
+          "active",
+          index === currentIndex
+        );
+
+      });
+
+
+      // Counter
+      currentSlideText.textContent =
+        String(currentIndex + 1).padStart(2, "0");
+
+    }
+
+
+    // Next
+    function nextSlide() {
+
+      currentIndex =
+        (currentIndex + 1) % totalSlides;
+
+      updateSlider();
+
+    }
+
+
+    // Previous
+    function previousSlide() {
+
+      currentIndex =
+        (currentIndex - 1 + totalSlides)
+        % totalSlides;
+
+      updateSlider();
+
+    }
+
+
+    // Buttons
+    nextBtn.addEventListener(
+      "click",
+      () => {
+
+        nextSlide();
+
+        restartAutoSlide();
+
+      }
+    );
+
+
+    prevBtn.addEventListener(
+      "click",
+      () => {
+
+        previousSlide();
+
+        restartAutoSlide();
+
+      }
+    );
+
+
+    // Auto slide
+    function startAutoSlide() {
+
+      autoSlide = setInterval(
+        nextSlide,
+        5000
+      );
+
+    }
+
+
+    // Restart auto slide
+    function restartAutoSlide() {
+
+      clearInterval(autoSlide);
+
+      startAutoSlide();
+
+    }
+
+
+    // Pause on hover
+    slider.addEventListener(
+      "mouseenter",
+      () => {
+        clearInterval(autoSlide);
+      }
+    );
+
+
+    // Resume on mouse leave
+    slider.addEventListener(
+      "mouseleave",
+      () => {
+        startAutoSlide();
+      }
+    );
+
+
+    // Keyboard navigation
+    document.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (event.key === "ArrowRight") {
+
+          nextSlide();
+
+          restartAutoSlide();
+
+        }
+
+        if (event.key === "ArrowLeft") {
+
+          previousSlide();
+
+          restartAutoSlide();
+
+        }
+
+      }
+    );
+
+
+    // Initialize
+    updateSlider();
+
+    startAutoSlide();
+
+  </script>
+
+</body>
+</html>
