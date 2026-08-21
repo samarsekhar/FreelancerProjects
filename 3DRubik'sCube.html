@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Rubik's Cube</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at center, #243b55 0%, #141e30 55%, #080d16 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            text-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            color: #cbd5e1;
+            margin-bottom: 30px;
+        }
+
+        .scene {
+            width: 300px;
+            height: 300px;
+            margin: auto;
+            perspective: 1000px;
+            cursor: grab;
+        }
+
+        .scene:active {
+            cursor: grabbing;
+        }
+
+        .cube {
+            width: 180px;
+            height: 180px;
+            position: relative;
+            margin: 60px auto;
+            transform-style: preserve-3d;
+            transform: rotateX(-25deg) rotateY(35deg);
+            transition: transform 0.2s ease;
+        }
+
+        .face {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            padding: 6px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 5px;
+            background: #111;
+            border: 3px solid #080808;
+            border-radius: 7px;
+            backface-visibility: visible;
+        }
+
+        .cell {
+            border-radius: 5px;
+            border: 2px solid rgba(0, 0, 0, 0.45);
+            box-shadow:
+                inset 0 0 5px rgba(255, 255, 255, .25),
+                0 1px 2px rgba(0, 0, 0, .5);
+        }
+
+        /* Rubik's colors */
+        .white {
+            background: #f8fafc;
+        }
+
+        .yellow {
+            background: #ffd500;
+        }
+
+        .red {
+            background: #e53935;
+        }
+
+        .orange {
+            background: #ff7a00;
+        }
+
+        .blue {
+            background: #1565c0;
+        }
+
+        .green {
+            background: #00a83b;
+        }
+
+        /* Cube faces */
+
+        .front {
+            transform: translateZ(90px);
+        }
+
+        .back {
+            transform: rotateY(180deg) translateZ(90px);
+        }
+
+        .right {
+            transform: rotateY(90deg) translateZ(90px);
+        }
+
+        .left {
+            transform: rotateY(-90deg) translateZ(90px);
+        }
+
+        .top {
+            transform: rotateX(90deg) translateZ(90px);
+        }
+
+        .bottom {
+            transform: rotateX(-90deg) translateZ(90px);
+        }
+
+        /* Controls */
+
+        .controls {
+            margin-top: 35px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        button {
+            border: none;
+            padding: 11px 17px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, .2);
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            transition: .25s;
+            backdrop-filter: blur(10px);
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, .22);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .3);
+        }
+
+        .main-buttons {
+            margin-top: 20px;
+        }
+
+        .scramble {
+            background: #ef4444;
+        }
+
+        .reset {
+            background: #2563eb;
+        }
+
+        .hint {
+            margin-top: 25px;
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 30px;
+            }
+
+            .scene {
+                transform: scale(.8);
+            }
+
+            .controls {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🎲 3D Rubik's Cube</h1>
+        <p class="subtitle">
+            Drag the cube to rotate it
+        </p>
+
+        <div class="scene" id="scene">
+
+            <div class="cube" id="cube">
+
+                <!-- FRONT -->
+                <div class="face front">
+                    <div class="cell red"></div>
+                    <div class="cell red"></div>
+                    <div class="cell red"></div>
+                    <div class="cell red"></div>
+                    <div class="cell red"></div>
+                    <div class="cell red"></div>
+                    <div class="cell red"></div>
+                    <div class="cell red"></div>
+                    <div class="cell red"></div>
+                </div>
+
+                <!-- BACK -->
+                <div class="face back">
+                    <div class="cell orange"></div>
+                    <div class="cell orange"></div>
+                    <div class="cell orange"></div>
+                    <div class="cell orange"></div>
+                    <div class="cell orange"></div>
+                    <div class="cell orange"></div>
+                    <div class="cell orange"></div>
+                    <div class="cell orange"></div>
+                    <div class="cell orange"></div>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="face right">
+                    <div class="cell blue"></div>
+                    <div class="cell blue"></div>
+                    <div class="cell blue"></div>
+                    <div class="cell blue"></div>
+                    <div class="cell blue"></div>
+                    <div class="cell blue"></div>
+                    <div class="cell blue"></div>
+                    <div class="cell blue"></div>
+                    <div class="cell blue"></div>
+                </div>
+
+                <!-- LEFT -->
+                <div class="face left">
+                    <div class="cell green"></div>
+                    <div class="cell green"></div>
+                    <div class="cell green"></div>
+                    <div class="cell green"></div>
+                    <div class="cell green"></div>
+                    <div class="cell green"></div>
+                    <div class="cell green"></div>
+                    <div class="cell green"></div>
+                    <div class="cell green"></div>
+                </div>
+
+                <!-- TOP -->
+                <div class="face top">
+                    <div class="cell white"></div>
+                    <div class="cell white"></div>
+                    <div class="cell white"></div>
+                    <div class="cell white"></div>
+                    <div class="cell white"></div>
+                    <div class="cell white"></div>
+                    <div class="cell white"></div>
+                    <div class="cell white"></div>
+                    <div class="cell white"></div>
+                </div>
+
+                <!-- BOTTOM -->
+                <div class="face bottom">
+                    <div class="cell yellow"></div>
+                    <div class="cell yellow"></div>
+                    <div class="cell yellow"></div>
+                    <div class="cell yellow"></div>
+                    <div class="cell yellow"></div>
+                    <div class="cell yellow"></div>
+                    <div class="cell yellow"></div>
+                    <div class="cell yellow"></div>
+                    <div class="cell yellow"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Face Controls -->
+        <div class="controls">
+
+            <button onclick="rotateX(-90)">⬆️ X−</button>
+            <button onclick="rotateX(90)">⬇️ X+</button>
+
+            <button onclick="rotateY(-90)">⬅️ Y−</button>
+            <button onclick="rotateY(90)">➡️ Y+</button>
+
+            <button onclick="rotateZ(-90)">↩️ Z−</button>
+            <button onclick="rotateZ(90)">↪️ Z+</button>
+
+        </div>
+
+        <div class="main-buttons">
+            <button class="scramble" onclick="scrambleCube()">
+                🔀 Scramble
+            </button>
+
+            <button class="reset" onclick="resetCube()">
+                🔄 Reset
+            </button>
+        </div>
+
+        <p class="hint">
+            💡 Tip: Click and drag the cube to explore it in 3D
+        </p>
+
+    </div>
+
+    <script>
+
+        const cube = document.getElementById("cube");
+        const scene = document.getElementById("scene");
+
+        let rotationX = -25;
+        let rotationY = 35;
+        let rotationZ = 0;
+
+        function updateCube() {
+            cube.style.transform =
+                `rotateX(${rotationX}deg)
+         rotateY(${rotationY}deg)
+         rotateZ(${rotationZ}deg)`;
+        }
+
+        function rotateX(deg) {
+            rotationX += deg;
+            updateCube();
+        }
+
+        function rotateY(deg) {
+            rotationY += deg;
+            updateCube();
+        }
+
+        function rotateZ(deg) {
+            rotationZ += deg;
+            updateCube();
+        }
+
+        function resetCube() {
+            rotationX = -25;
+            rotationY = 35;
+            rotationZ = 0;
+
+            cube.style.transition = "transform .6s ease";
+
+            updateCube();
+
+            setTimeout(() => {
+                cube.style.transition = "transform .2s ease";
+            }, 600);
+        }
+
+        /* Scramble animation */
+
+        function scrambleCube() {
+
+            cube.style.transition = "transform .25s ease";
+
+            let moves = 0;
+
+            const scramble = setInterval(() => {
+
+                rotationX +=
+                    (Math.floor(Math.random() * 3) - 1) * 90;
+
+                rotationY +=
+                    (Math.floor(Math.random() * 3) - 1) * 90;
+
+                rotationZ +=
+                    (Math.floor(Math.random() * 3) - 1) * 90;
+
+                updateCube();
+
+                moves++;
+
+                if (moves >= 10) {
+                    clearInterval(scramble);
+                }
+
+            }, 250);
+        }
+
+        /* Mouse / Touch Drag */
+
+        let dragging = false;
+
+        let startX = 0;
+        let startY = 0;
+
+        let previousX = 0;
+        let previousY = 0;
+
+        scene.addEventListener("mousedown", startDrag);
+
+        document.addEventListener("mousemove", drag);
+
+        document.addEventListener("mouseup", stopDrag);
+
+        scene.addEventListener("touchstart", startTouch, {
+            passive: false
+        });
+
+        document.addEventListener("touchmove", moveTouch, {
+            passive: false
+        });
+
+        document.addEventListener("touchend", stopDrag);
+
+        function startDrag(e) {
+
+            dragging = true;
+
+            startX = e.clientX;
+            startY = e.clientY;
+
+            previousX = e.clientX;
+            previousY = e.clientY;
+        }
+
+        function drag(e) {
+
+            if (!dragging) return;
+
+            const deltaX = e.clientX - previousX;
+            const deltaY = e.clientY - previousY;
+
+            rotationY += deltaX * 0.6;
+            rotationX -= deltaY * 0.6;
+
+            updateCube();
+
+            previousX = e.clientX;
+            previousY = e.clientY;
+        }
+
+        function startTouch(e) {
+
+            e.preventDefault();
+
+            dragging = true;
+
+            const touch = e.touches[0];
+
+            previousX = touch.clientX;
+            previousY = touch.clientY;
+        }
+
+        function moveTouch(e) {
+
+            if (!dragging) return;
+
+            e.preventDefault();
+
+            const touch = e.touches[0];
+
+            const deltaX = touch.clientX - previousX;
+            const deltaY = touch.clientY - previousY;
+
+            rotationY += deltaX * 0.6;
+            rotationX -= deltaY * 0.6;
+
+            updateCube();
+
+            previousX = touch.clientX;
+            previousY = touch.clientY;
+        }
+
+        function stopDrag() {
+            dragging = false;
+        }
+
+    </script>
+
+</body>
+
+</html>
