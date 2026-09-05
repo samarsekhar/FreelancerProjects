@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Sort Section</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f6fa;
+      padding: 30px;
+      color: #222;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    /* Sort Header */
+    .sort-section {
+      background: #fff;
+      padding: 18px 20px;
+      border-radius: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    }
+
+    .result-count {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .sort-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sort-box label {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .sort-select {
+      min-width: 190px;
+      padding: 11px 14px;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      background: #fff;
+      color: #222;
+      font-size: 14px;
+      outline: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .sort-select:hover,
+    .sort-select:focus {
+      border-color: #6c5ce7;
+      box-shadow: 0 0 0 3px rgba(108,92,231,0.1);
+    }
+
+    /* Products */
+    .products {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .product {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.06);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .product:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .product img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .product-info {
+      padding: 16px;
+    }
+
+    .product-info h3 {
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .product-info p {
+      color: #777;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 19px;
+      font-weight: 700;
+      color: #6c5ce7;
+    }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      .products {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 15px;
+      }
+
+      .sort-section {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .sort-box {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .sort-select {
+        width: 100%;
+      }
+
+      .products {
+        grid-template-columns: 1fr;
+      }
+
+      .product img {
+        height: 230px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- Sort Section -->
+    <div class="sort-section">
+
+      <div class="result-count">
+        <span id="resultCount">8</span> Products
+      </div>
+
+      <div class="sort-box">
+        <label for="sortSelect">Sort by:</label>
+
+        <select id="sortSelect" class="sort-select">
+          <option value="relevant">Relevant</option>
+          <option value="low-high">Price: Low to High</option>
+          <option value="high-low">Price: High to Low</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Products -->
+    <div class="products" id="productList">
+
+      <div class="product" data-price="1299" data-index="1">
+        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80">
+        <div class="product-info">
+          <h3>Classic Watch</h3>
+          <p>Premium wrist watch</p>
+          <div class="price">₹1,299</div>
+        </div>
+      </div>
+
+      <div class="product" data-price="799" data-index="2">
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80">
+        <div class="product-info">
+          <h3>Running Shoes</h3>
+          <p>Comfortable sports shoes</p>
+          <div class="price">₹799</div>
+        </div>
+      </div>
+
+      <div class="product" data-price="2499" data-index="3">
+        <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=600&q=80">
+        <div class="product-info">
+          <h3>Wireless Headphones</h3>
+          <p>Noise cancelling audio</p>
+          <div class="price">₹2,499</div>
+        </div>
+      </div>
+
+      <div class="product" data-price="599" data-index="4">
+        <img src="https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?auto=format&fit=crop&w=600&q=80">
+        <div class="product-info">
+          <h3>Smart Case</h3>
+          <p>Premium phone case</p>
+          <div class="price">₹599</div>
+        </div>
+      </div>
+
+      <div class="product" data-price="3499" data-index="5">
+        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80">
+        <div class="product-info">
+          <h3>Smartphone</h3>
+          <p>Latest technology</p>
+          <div class="price">₹3,499</div>
+        </div>
+      </div>
+
+      <div class="product" data-price="999" data-index="6">
+        <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=600&q=80">
+        <div class="product-info">
+          <h3>Camera</h3>
+          <p>Capture every moment</p>
+          <div class="price">₹999</div>
+        </div>
+      </div>
+
+      <div class="product" data-price="1899" data-index="7">
+        <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=600&q=80">
+        <div class="product-info">
+          <h3>Smart Watch</h3>
+          <p>Fitness & health tracking</p>
+          <div class="price">₹1,899</div>
+        </div>
+      </div>
+
+      <div class="product" data-price="399" data-index="8">
+        <img src="https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=600&q=80">
+        <div class="product-info">
+          <h3>Modern Chair</h3>
+          <p>Minimal home furniture</p>
+          <div class="price">₹399</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const sortSelect = document.getElementById("sortSelect");
+    const productList = document.getElementById("productList");
+    const resultCount = document.getElementById("resultCount");
+
+    sortSelect.addEventListener("change", function () {
+
+      const products = Array.from(
+        productList.querySelectorAll(".product")
+      );
+
+      const value = this.value;
+
+      if (value === "low-high") {
+
+        products.sort((a, b) => {
+          return Number(a.dataset.price) - Number(b.dataset.price);
+        });
+
+      } else if (value === "high-low") {
+
+        products.sort((a, b) => {
+          return Number(b.dataset.price) - Number(a.dataset.price);
+        });
+
+      } else {
+
+        // Restore original / relevant order
+        products.sort((a, b) => {
+          return Number(a.dataset.index) - Number(b.dataset.index);
+        });
+      }
+
+      // Re-render products
+      products.forEach(product => {
+        productList.appendChild(product);
+      });
+
+      // Update count
+      resultCount.textContent = products.length;
+    });
+  </script>
+
+</body>
+</html>
