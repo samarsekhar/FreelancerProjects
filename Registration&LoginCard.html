@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registration & Login Card</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Dosis|Roboto:300,400');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #ffc185;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 310px;
+            height: 470px;
+        }
+
+        form {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            text-align: center;
+            background: #fff;
+
+            width: 310px;
+            height: 470px;
+
+            border-radius: 5px;
+            padding: 30px 20px 0;
+
+            box-shadow: 0 10px 50px 0 rgba(0, 0, 0, 0.25);
+
+            overflow: hidden;
+        }
+
+        p {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+            text-transform: uppercase;
+            font-size: 12px;
+            color: #87613d;
+            margin-bottom: 40px;
+        }
+
+        p>span {
+            padding-top: 3px;
+            display: block;
+            font-weight: 400;
+            font-size: 9px;
+        }
+
+        h3 {
+            font-family: 'Dosis', sans-serif;
+            font-size: 35px;
+            text-transform: uppercase;
+            color: #87613d;
+            margin-bottom: 30px;
+        }
+
+        input,
+        button {
+            outline: none;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* Facebook button */
+
+        button.fb {
+            border: none;
+            background: #3b5998;
+
+            width: 160px;
+            height: 25px;
+
+            font-family: 'Roboto', sans-serif;
+            font-size: 12px;
+            color: #fff;
+
+            text-transform: uppercase;
+            border-radius: 4px;
+
+            border: 1px solid #29487d;
+
+            margin-bottom: 20px;
+
+            transition: all 0.3s linear;
+        }
+
+        button.fb:hover {
+            background: #fff;
+            color: #3b5998;
+        }
+
+        /* Bottom buttons */
+
+        button.form-btn {
+            position: absolute;
+
+            width: 50%;
+            height: 60px;
+
+            bottom: 0;
+
+            border: 0;
+
+            font-family: 'Dosis', sans-serif;
+            font-size: 24px;
+
+            text-transform: uppercase;
+
+            cursor: pointer;
+        }
+
+        button.form-btn.sx {
+            left: 0;
+
+            border-radius: 0 0 0 5px;
+
+            background-color: rgba(255, 125, 0, 0.35);
+            color: #fff;
+
+            transition: all 0.3s linear;
+        }
+
+        button.form-btn.sx:hover {
+            background-color: rgba(255, 125, 0, 0.65);
+        }
+
+        button.form-btn.sx.back {
+            background-color: rgba(0, 0, 0, 0.15);
+        }
+
+        button.form-btn.sx.back:hover {
+            background-color: rgba(0, 0, 0, 0.35);
+        }
+
+        button.form-btn.dx {
+            right: 0;
+
+            border-radius: 0 0 5px 0;
+
+            background-color: #ff7d00;
+            color: #fff;
+        }
+
+        /* Inputs */
+
+        input {
+            border: none;
+            border-bottom: 1px solid #ffc185;
+
+            width: 85%;
+
+            font-family: 'Roboto', sans-serif;
+
+            color: #ff7d00;
+
+            text-align: center;
+
+            font-size: 21px;
+            font-weight: 300;
+
+            margin-bottom: 25px;
+
+            padding: 5px;
+        }
+
+        input:focus {
+            border-bottom-color: #ff7d00;
+        }
+
+        input::placeholder {
+            color: #ffc185;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 300;
+        }
+
+        .signIn input,
+        .signUp .w100 {
+            width: 100%;
+        }
+
+        /* Initial states */
+
+        .signIn {
+            z-index: 1;
+
+            transform:
+                perspective(100px) translate3d(100px, 0px, -30px);
+
+            opacity: 0.5;
+        }
+
+        .signUp {
+            z-index: 2;
+        }
+
+        /* Animations */
+
+        .active-dx {
+            animation:
+                foregrounding-dx 0.9s forwards;
+        }
+
+        .active-sx {
+            animation:
+                foregrounding-sx 0.9s forwards;
+        }
+
+        .inactive-dx {
+            animation:
+                overshadowing-dx 0.9s forwards;
+        }
+
+        .inactive-sx {
+            animation:
+                overshadowing-sx 0.9s forwards;
+        }
+
+        /* Sign up -> Sign in */
+
+        @keyframes foregrounding-dx {
+
+            0% {
+                z-index: 1;
+
+                transform:
+                    perspective(100px) translate3d(100px, 0px, -30px);
+
+                opacity: 0.5;
+            }
+
+            50% {
+                z-index: 2;
+
+                transform:
+                    perspective(100px) translate3d(400px, 0px, -30px);
+            }
+
+            100% {
+                z-index: 2;
+
+                transform:
+                    perspective(100px) translate3d(0, 0, 0);
+
+                opacity: 1;
+            }
+        }
+
+        /* Sign in -> Sign up */
+
+        @keyframes foregrounding-sx {
+
+            0% {
+                z-index: 1;
+
+                transform:
+                    perspective(100px) translate3d(-100px, 0px, -30px);
+
+                opacity: 0.5;
+            }
+
+            50% {
+                z-index: 2;
+
+                transform:
+                    perspective(100px) translate3d(-400px, 0px, -30px);
+            }
+
+            100% {
+                z-index: 2;
+
+                transform:
+                    perspective(100px) translate3d(0, 0, 0);
+
+                opacity: 1;
+            }
+        }
+
+        /* Move sign in to background */
+
+        @keyframes overshadowing-dx {
+
+            0% {
+                z-index: 2;
+
+                transform:
+                    perspective(100px) translate3d(0, 0, 0);
+
+                opacity: 1;
+
+                box-shadow:
+                    0 10px 50px 0 rgba(0, 0, 0, 0.25);
+            }
+
+            100% {
+                z-index: 1;
+
+                transform:
+                    perspective(100px) translate3d(100px, 0, -30px);
+
+                opacity: 0.5;
+
+                box-shadow:
+                    0 10px 20px 0 rgba(0, 0, 0, 0.25);
+            }
+        }
+
+        /* Move sign up to background */
+
+        @keyframes overshadowing-sx {
+
+            0% {
+                z-index: 2;
+
+                transform:
+                    perspective(100px) translate3d(0, 0, 0);
+
+                opacity: 1;
+
+                box-shadow:
+                    0 10px 50px 0 rgba(0, 0, 0, 0.25);
+            }
+
+            100% {
+                z-index: 1;
+
+                transform:
+                    perspective(100px) translate3d(-100px, 0, -30px);
+
+                opacity: 0.5;
+
+                box-shadow:
+                    0 10px 20px 0 rgba(0, 0, 0, 0.25);
+            }
+        }
+
+        /* Mobile */
+
+        @media (max-width: 480px) {
+
+            .container {
+                transform: scale(0.9);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- SIGN UP -->
+
+        <form class="signUp">
+
+            <h3>Create Your Account</h3>
+
+            <p>
+                Just enter your email address
+                <br>
+                and your password for join.
+            </p>
+
+            <input class="w100" type="email" placeholder="Insert eMail" required autocomplete="off">
+
+            <input type="password" placeholder="Insert Password" required>
+
+            <input type="password" placeholder="Verify Password" required>
+
+            <button class="form-btn sx log-in" type="button">
+                Log In
+            </button>
+
+            <button class="form-btn dx" type="submit">
+                Sign Up
+            </button>
+
+        </form>
+
+
+        <!-- SIGN IN -->
+
+        <form class="signIn">
+
+            <h3>
+                Welcome
+                <br>
+                Back !
+            </h3>
+
+            <button class="fb" type="button">
+                Log In With Facebook
+            </button>
+
+            <p>- or -</p>
+
+            <input type="email" placeholder="Insert eMail" autocomplete="off" required>
+
+            <input type="password" placeholder="Insert Password" required>
+
+            <button class="form-btn sx back" type="button">
+                Back
+            </button>
+
+            <button class="form-btn dx" type="submit">
+                Log In
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <script>
+
+        // Get elements
+        const signUp = document.querySelector(".signUp");
+        const signIn = document.querySelector(".signIn");
+
+        const loginButton = document.querySelector(".log-in");
+        const backButton = document.querySelector(".back");
+
+
+        // SIGN UP -> SIGN IN
+
+        loginButton.addEventListener("click", () => {
+
+            signIn.classList.add("active-dx");
+
+            signUp.classList.add("inactive-sx");
+
+            signUp.classList.remove("active-sx");
+
+            signIn.classList.remove("inactive-dx");
+
+        });
+
+
+        // SIGN IN -> SIGN UP
+
+        backButton.addEventListener("click", () => {
+
+            signUp.classList.add("active-sx");
+
+            signIn.classList.add("inactive-dx");
+
+            signIn.classList.remove("active-dx");
+
+            signUp.classList.remove("inactive-sx");
+
+        });
+
+
+        // Prevent demo form submission
+
+        signUp.addEventListener("submit", (event) => {
+
+            event.preventDefault();
+
+            alert("Sign Up submitted!");
+
+        });
+
+
+        signIn.addEventListener("submit", (event) => {
+
+            event.preventDefault();
+
+            alert("Login submitted!");
+
+        });
+
+    </script>
+
+</body>
+
+</html>
