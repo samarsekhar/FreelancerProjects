@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Client Logo Slider</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* background: #f8fafc; */
+            background: #e34f10;
+            font-family: Arial, sans-serif;
+        }
+
+        .clients-section {
+            width: 100%;
+            padding: 70px 0;
+            overflow: hidden;
+        }
+
+        .clients-title {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+
+        .clients-title span {
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            /* color: #6366f1; */
+            color: #e64ce1;
+            text-transform: uppercase;
+        }
+
+        .clients-title h2 {
+            font-size: clamp(28px, 4vw, 45px);
+            color: #111827;
+        }
+
+        /* Slider */
+        .logo-slider {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+
+            mask-image: linear-gradient(to right,
+                    transparent,
+                    black 10%,
+                    black 90%,
+                    transparent);
+            -webkit-mask-image: linear-gradient(to right,
+                    transparent,
+                    black 10%,
+                    black 90%,
+                    transparent);
+        }
+
+        .logo-track {
+            display: flex;
+            width: max-content;
+            gap: 25px;
+            animation: slide 25s linear infinite;
+        }
+
+        .logo-slider:hover .logo-track {
+            animation-play-state: paused;
+        }
+
+        .logo-card {
+            width: 190px;
+            height: 100px;
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 18px;
+
+            font-size: 22px;
+            font-weight: 800;
+            color: #5452b9;
+
+            transition:
+                transform 0.35s ease,
+                box-shadow 0.35s ease,
+                color 0.35s ease;
+        }
+
+        .logo-card:hover {
+            transform: translateY(-8px) scale(1.04);
+            color: #4f46e5;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Logo styling */
+        .logo-card span {
+            transition: 0.35s ease;
+        }
+
+        .logo-card:hover span {
+            transform: scale(1.1);
+        }
+
+        /* Infinite animation */
+        @keyframes slide {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(calc(-50% - 12.5px));
+            }
+        }
+
+        /* Second row */
+        .logo-slider.second {
+            margin-top: 25px;
+        }
+
+        .logo-slider.second .logo-track {
+            animation-direction: reverse;
+            animation-duration: 28s;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .clients-section {
+                padding: 50px 0;
+            }
+
+            .clients-title {
+                margin-bottom: 30px;
+            }
+
+            .logo-card {
+                width: 150px;
+                height: 80px;
+                font-size: 18px;
+                border-radius: 14px;
+            }
+
+            .logo-track {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-card {
+                width: 130px;
+                height: 70px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="clients-section">
+
+        <div class="clients-title">
+            <span>Trusted By</span>
+            <h2>Our Amazing Clients</h2>
+        </div>
+
+        <!-- Row 1 -->
+        <div class="logo-slider">
+            <div class="logo-track">
+
+                <div class="logo-card">
+                    <span>Google</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Microsoft</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Amazon</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Netflix</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Adobe</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Spotify</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Meta</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Slack</span>
+                </div>
+
+                <!-- Duplicate logos for infinite loop -->
+
+                <div class="logo-card">
+                    <span>Google</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Microsoft</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Amazon</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Netflix</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Adobe</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Spotify</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Meta</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Slack</span>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Row 2 -->
+        <div class="logo-slider second">
+            <div class="logo-track">
+
+                <div class="logo-card">
+                    <span>Apple</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Netflix</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Airbnb</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Uber</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Stripe</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Figma</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>GitHub</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Dropbox</span>
+                </div>
+
+                <!-- Duplicate logos -->
+
+                <div class="logo-card">
+                    <span>Apple</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Netflix</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Airbnb</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Uber</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Stripe</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Figma</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>GitHub</span>
+                </div>
+
+                <div class="logo-card">
+                    <span>Dropbox</span>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+
+    <script>
+        const sliders = document.querySelectorAll(".logo-slider");
+
+        sliders.forEach((slider) => {
+
+            slider.addEventListener("mouseenter", () => {
+                slider.querySelector(".logo-track").style.animationPlayState =
+                    "paused";
+            });
+
+            slider.addEventListener("mouseleave", () => {
+                slider.querySelector(".logo-track").style.animationPlayState =
+                    "running";
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>
