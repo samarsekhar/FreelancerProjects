@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entrance Reveal | Gradient Text</title>
+  <!-- <link rel="stylesheet" href="style.css" /> -->
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+    :root {
+      --bg: #080811;
+      --text: #f7f5ff;
+      --muted: #a6a4bd;
+      --purple: #a855f7;
+      --pink: #f472b6;
+      --blue: #60a5fa;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DM Sans", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.2;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.4) 0.65px,
+          transparent 0.65px);
+      background-size: 23px 23px;
+      mask-image: linear-gradient(to bottom, black, transparent 90%);
+    }
+
+    .hero {
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+      min-height: 100svh;
+      padding: 32px clamp(22px, 7vw, 110px) 30px;
+      overflow: hidden;
+    }
+
+    .nav {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      text-decoration: none;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      font-size: 15px;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      color: white;
+      font-size: 18px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #a855f7, #ec4899 55%, #60a5fa);
+      box-shadow: 0 0 24px #a855f744;
+    }
+
+    .nav-note,
+    .corner-label {
+      color: #77758f;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 1000px);
+      margin: auto 0;
+      padding: 90px 0 105px;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 28px;
+      color: #c4b5fd;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+    }
+
+    .eyebrow-line {
+      display: inline-block;
+      width: 34px;
+      height: 1px;
+      background: linear-gradient(90deg, var(--pink), var(--purple));
+    }
+
+    .headline {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(3.4rem, 9.4vw, 8.5rem);
+      line-height: 0.98;
+      letter-spacing: -0.075em;
+      font-weight: 600;
+    }
+
+    .line-wrap {
+      display: block;
+      overflow: hidden;
+      padding: 0.05em 0.08em 0.12em 0;
+    }
+
+    .line {
+      display: inline-block;
+      transform: translateY(115%) rotate(3deg);
+      opacity: 0;
+      animation: textReveal 1s cubic-bezier(0.2, 0.75, 0.2, 1) forwards;
+    }
+
+    .line-wrap:nth-child(2) .line {
+      animation-delay: 0.18s;
+    }
+
+    .gradient-text {
+      color: transparent;
+      background: linear-gradient(100deg,
+          #c084fc 4%,
+          #f0abfc 35%,
+          #fb7185 62%,
+          #60a5fa 94%);
+      background-size: 220% auto;
+      background-clip: text;
+      -webkit-background-clip: text;
+      animation:
+        textReveal 1s cubic-bezier(0.2, 0.75, 0.2, 1) 0.18s forwards,
+        gradientFlow 6s ease-in-out 1.2s infinite;
+      filter: drop-shadow(0 0 35px #a855f71c);
+    }
+
+    .description {
+      max-width: 490px;
+      margin: 28px 0 0;
+      color: var(--muted);
+      font-size: clamp(14px, 1.4vw, 17px);
+      line-height: 1.8;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 25px;
+      margin-top: 34px;
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 22px;
+      min-height: 54px;
+      padding: 0 22px;
+      border: 1px solid rgba(255, 255, 255, 0.17);
+      border-radius: 12px;
+      color: #fff;
+      background: linear-gradient(110deg, #9333ea, #db2777 70%, #7c3aed);
+      box-shadow:
+        0 10px 35px #a855f72c,
+        inset 0 1px rgba(255, 255, 255, 0.22);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+    }
+
+    .primary-btn span {
+      font-size: 18px;
+      transition: transform 0.25s ease;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 45px #a855f74c;
+    }
+
+    .primary-btn:hover span {
+      transform: translate(3px, -3px);
+    }
+
+    .replay-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 12px 0;
+      border: 0;
+      color: #b9b7cd;
+      background: transparent;
+      cursor: pointer;
+      font:
+        600 13px "DM Sans",
+        sans-serif;
+      transition: color 0.2s ease;
+    }
+
+    .replay-btn:hover {
+      color: white;
+    }
+
+    .replay-btn span {
+      font-size: 20px;
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      margin-top: 75px;
+      color: #77758f;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.17em;
+    }
+
+    .meta-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #c084fc;
+      box-shadow: 0 0 12px #c084fc;
+    }
+
+    .meta-divider {
+      width: 1px;
+      height: 12px;
+      margin: 0 7px;
+      background: #3a384c;
+    }
+
+    .ambient {
+      position: fixed;
+      z-index: -1;
+      width: 44vw;
+      height: 44vw;
+      min-width: 350px;
+      min-height: 350px;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.17;
+      pointer-events: none;
+      animation: floatGlow 12s ease-in-out infinite alternate;
+    }
+
+    .ambient-one {
+      top: -18%;
+      right: -8%;
+      background: #8128ff;
+    }
+
+    .ambient-two {
+      bottom: -30%;
+      left: 35%;
+      background: #e13c98;
+      animation-delay: -5s;
+      opacity: 0.11;
+    }
+
+    .orbit {
+      position: absolute;
+      z-index: -1;
+      border: 1px solid rgba(196, 181, 253, 0.09);
+      border-radius: 50%;
+      pointer-events: none;
+      transform: rotate(-28deg);
+    }
+
+    .orbit-one {
+      width: 640px;
+      height: 270px;
+      right: -160px;
+      top: 28%;
+    }
+
+    .orbit-two {
+      width: 780px;
+      height: 340px;
+      right: -220px;
+      top: 23%;
+      border-color: rgba(244, 114, 182, 0.07);
+    }
+
+    .corner-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      font-size: 9px;
+    }
+
+    .corner-label span {
+      color: #55536b;
+    }
+
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(22px);
+      animation: fadeUp 0.75s cubic-bezier(0.2, 0.75, 0.2, 1) forwards;
+    }
+
+    .eyebrow {
+      animation-delay: 0.12s;
+    }
+
+    .description {
+      animation-delay: 0.55s;
+    }
+
+    .actions {
+      animation-delay: 0.72s;
+    }
+
+    .hero-meta {
+      animation-delay: 0.9s;
+    }
+
+    @keyframes textReveal {
+      to {
+        transform: translateY(0) rotate(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes gradientFlow {
+
+      0%,
+      100% {
+        background-position: 0% center;
+      }
+
+      50% {
+        background-position: 100% center;
+      }
+    }
+
+    @keyframes floatGlow {
+      from {
+        transform: translate3d(-2%, -2%, 0) scale(0.95);
+      }
+
+      to {
+        transform: translate3d(5%, 6%, 0) scale(1.1);
+      }
+    }
+
+    .hero.replay .line {
+      animation: none;
+      opacity: 0;
+      transform: translateY(115%) rotate(3deg);
+    }
+
+    .hero.replay .reveal-item {
+      animation: none;
+      opacity: 0;
+      transform: translateY(22px);
+    }
+
+    .hero.replay .line-wrap:first-child .line {
+      animation: textReveal 1s cubic-bezier(0.2, 0.75, 0.2, 1) 0.08s forwards;
+    }
+
+    .hero.replay .line-wrap:nth-child(2) .line {
+      animation:
+        textReveal 1s cubic-bezier(0.2, 0.75, 0.2, 1) 0.24s forwards,
+        gradientFlow 6s ease-in-out 1.2s infinite;
+    }
+
+    .hero.replay .eyebrow {
+      animation: fadeUp 0.75s ease 0.12s forwards;
+    }
+
+    .hero.replay .description {
+      animation: fadeUp 0.75s ease 0.55s forwards;
+    }
+
+    .hero.replay .actions {
+      animation: fadeUp 0.75s ease 0.72s forwards;
+    }
+
+    .hero.replay .hero-meta {
+      animation: fadeUp 0.75s ease 0.9s forwards;
+    }
+
+    @media (max-width: 600px) {
+      .hero {
+        padding: 22px 22px 24px;
+      }
+
+      .nav-note {
+        max-width: 130px;
+        text-align: right;
+        line-height: 1.6;
+        font-size: 8px;
+      }
+
+      .hero-content {
+        padding: 80px 0 75px;
+      }
+
+      .headline {
+        font-size: clamp(3.2rem, 14vw, 5.2rem);
+      }
+
+      .description {
+        max-width: 390px;
+        margin-top: 22px;
+      }
+
+      .actions {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .hero-meta {
+        flex-wrap: wrap;
+        margin-top: 55px;
+        font-size: 8px;
+        gap: 8px;
+      }
+
+      .orbit-one {
+        right: -480px;
+      }
+
+      .orbit-two {
+        right: -510px;
+      }
+
+      .corner-label {
+        font-size: 8px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <main class="hero">
+    <nav class="nav">
+      <a class="brand" href="#" aria-label="Astra home"><span class="brand-mark">✦</span> ASTRA</a>
+      <span class="nav-note">DESIGN THAT MOVES YOU</span>
+    </nav>
+
+    <section class="hero-content" aria-labelledby="hero-title">
+      <p class="eyebrow reveal-item"><span class="eyebrow-line"></span> A NEW CREATIVE ERA</p>
+      <h1 id="hero-title" class="headline">
+        <span class="line-wrap"><span class="line">Make your</span></span>
+        <span class="line-wrap"><span class="line gradient-text">boldest move.</span></span>
+      </h1>
+      <p class="description reveal-item">
+        Bring your ideas to life with motion, color, and a little bit of magic.
+        Your next chapter starts right here.
+      </p>
+      <div class="actions reveal-item">
+        <a class="primary-btn" href="#explore">Explore the experience <span aria-hidden="true">↗</span></a>
+        <button class="replay-btn" id="replayBtn" type="button"><span aria-hidden="true">↻</span> Replay reveal</button>
+      </div>
+      <div class="hero-meta reveal-item" id="explore">
+        <span class="meta-dot"></span> BUILT FOR WHAT'S NEXT
+        <span class="meta-divider"></span>
+        <span>SCROLL LESS. FEEL MORE.</span>
+      </div>
+    </section>
+
+    <div class="orbit orbit-one" aria-hidden="true"></div>
+    <div class="orbit orbit-two" aria-hidden="true"></div>
+    <div class="corner-label">CREATIVE STUDIO <span>© 2026</span></div>
+  </main>
+  <!-- <script src="script.js"></script> -->
+  <script>
+    const replayBtn = document.getElementById('replayBtn');
+    const hero = document.querySelector('.hero');
+
+    replayBtn.addEventListener('click', () => {
+      hero.classList.remove('replay');
+      // Force a layout pass so the entrance animations can restart.
+      void hero.offsetWidth;
+      hero.classList.add('replay');
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        const target = document.querySelector(link.getAttribute('href'));
+        if (!target) event.preventDefault();
+      });
+    });
+
+  </script>
+</body>
+
+</html>
