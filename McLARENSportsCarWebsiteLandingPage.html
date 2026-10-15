@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>McLAREN | Sports Car Website Landing Page</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD"
+      crossorigin="anonymous"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #00c2de;
+}
+
+body {
+  background: #000;
+  /* background: #fff; */
+  font-family: "Roboto", sans-serif;
+}
+
+/* Header */
+header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 30px 100px;
+  z-index: 1000;
+}
+
+header::after {
+  position: absolute;
+  content: "";
+  top: 50%;
+  transform: translateY(-50%);
+  left: 100px;
+  height: 5px;
+  width: 40%;
+  background: linear-gradient(90deg, var(--primary), transparent);
+}
+
+.logo {
+  font-size: 30px;
+  color: #fff;
+}
+
+.logo img {
+  max-width: 200px;
+  filter: invert(1);
+}
+
+header .year {
+  font-family: "Racing Sans One", cursive;
+  font-size: 1em;
+  color: #fff;
+  letter-spacing: 1px;
+  font-weight: 800;
+  margin-top: 40px;
+}
+
+header .menu {
+  position: relative;
+  height: 30px;
+  width: 30px;
+  background: url("./images/menu-3-fill.png") no-repeat;
+  background-size: 30px;
+  background-position: center;
+  filter: invert(1);
+  cursor: pointer;
+}
+
+header .menu.active {
+  position: relative;
+  height: 30px;
+  width: 30px;
+  background: url("./images/close-line.png") no-repeat;
+  background-size: 30px;
+  background-position: center;
+  filter: invert(1);
+  cursor: pointer;
+}
+
+/* Navigation */
+.nav {
+  z-index: 200;
+  position: absolute;
+  right: 100px;
+  top: 0;
+  width: 30%;
+  height: 5px;
+  border-bottom: 5px solid;
+  border-image: linear-gradient(
+      90deg,
+      transparent,
+      var(--primary),
+      var(--primary)
+    )
+    30;
+  background: transparent;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 1s;
+  transform-origin: right;
+}
+
+.nav.active {
+  top: 100px;
+  width: 40%;
+  height: 100px;
+  border-top: 5px solid;
+  border-image: linear-gradient(
+      90deg,
+      transparent,
+      var(--primary),
+      var(--primary),
+      transparent
+    )
+    30;
+  border-bottom: none;
+}
+
+.nav li {
+  position: relative;
+  list-style: menu;
+  list-style-type: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-100px);
+  transition: 0.5s;
+}
+
+.nav.active li {
+  transform: translateY(0);
+  visibility: visible;
+  opacity: 1;
+}
+
+.nav li a {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: 200;
+  letter-spacing: 1px;
+  /*padding: 8px 20px Original  */
+  padding: 10px 12px;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.nav li a:hover {
+  box-shadow: inset 0 0 20px rgba(0, 194, 222, 0.5);
+}
+
+/* Banner */
+.banner {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 0 100px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: hidden;
+  transition: 0.5s;
+}
+
+.banner::after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.6),
+    rgba(0, 0, 0, 0.9)
+  );
+}
+
+.banner::before {
+  position: absolute;
+  content: "";
+  top: 25%;
+  left: 0;
+  width: 5px;
+  height: 40%;
+  background: linear-gradient(var(--primary), var(--primary), transparent);
+  z-index: 100;
+}
+
+/* Background Video */
+.banner .bg-video {
+  display: none;
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.banner .bg-video.active {
+  display: block;
+}
+
+/* Banner Content */
+.banner .content {
+  position: relative;
+  max-width: 700px;
+  padding-bottom: 60px;
+  z-index: 100;
+}
+
+.banner .content h1 {
+  font-family: "Racing Sans One", cursive;
+  /* font-size-10px Original */
+  font-size: 7em;
+  color: #fff;
+  font-weight: 500;
+  line-height: 0.8em;
+  letter-spacing: 5px;
+}
+
+.banner .content .model {
+  font-size: 4em;
+  text-transform: uppercase;
+  color: var(--primary);
+  display: none;
+}
+
+.banner .content .model.active {
+  display: block;
+}
+
+.banner .content p {
+  color: #fff;
+  font-size: 200;
+  letter-spacing: 1px;
+  margin-bottom: 50px;
+}
+
+.banner .content a {
+  position: relative;
+  width: 200px;
+  color: #fff;
+  text-decoration: none;
+  padding: 15px 60px;
+  background: transparent;
+  border-bottom: 3px solid;
+  border-image: linear-gradient(
+      90deg,
+      transparent,
+      var(--primary),
+      var(--primary),
+      transparent
+    )
+    30;
+  box-shadow: inset 0 0 10px rgba(0, 194, 222, 0.5);
+  backdrop-filter: blur(20px);
+  text-transform: uppercase;
+  font-size: 1.2em;
+  font-weight: 300;
+  letter-spacing: 1px;
+  transition: 0.5s;
+}
+
+.banner .content a:hover {
+  box-shadow: inset 0 0 50px rgba(0, 194, 222, 0.5);
+}
+
+/* Screen */
+.banner .screen {
+  position: absolute;
+  right: 10%;
+  bottom: 100px;
+  width: 300px;
+  height: 200px;
+  transform-style: preserve-3d;
+  animation: animate 30s linear infinite;
+  z-index: 100;
+}
+
+/* Rotate from 0deg to 360deg = one round */
+@keyframes animate {
+  0% {
+    transform: rotateX(-30deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(-30deg) rotateY(360deg);
+  }
+}
+
+.screen div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.screen div span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(transparent, var(--primary));
+  transform: rotateY(calc(90deg * var(--i))) translateZ(150px);
+  /* 300px / 2 = 150px */
+}
+
+.shadow {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 150px;
+  /* height: 200px */
+  background: var(--primary);
+  /* transform: rotateX(-90deg) translateZ(75px); */
+  transform: rotateX(-90deg) translateZ(150px);
+  filter: blur(20px);
+  box-shadow:
+    0 0 120px rgba(0, 194, 222, 0.2),
+    0 0 120px rgba(0, 194, 222, 0.4),
+    0 0 120px rgba(0, 194, 222, 0.6),
+    0 0 120px rgba(0, 194, 222, 0.8),
+    0 0 120px rgba(0, 194, 222, 1);
+}
+
+/* Screen Video */
+.screen div span video {
+  position: absolute;
+  bottom: 0;
+  height: 75%;
+  width: 100%;
+  transition: 0.5s;
+  object-fit: cover;
+  object-position: center;
+}
+
+.trailer {
+  display: none;
+}
+
+.trailer.active {
+  display: block;
+}
+
+/* Banner Gallery */
+.banner .gallery {
+  position: absolute;
+  content: "";
+  left: 100px;
+  bottom: 0;
+  width: 55%;
+  /* height: 30% */
+  height: 25%;
+  z-index: 100;
+  background: transparent;
+  box-shadow:
+    0px 10px 40px rgba(0, 0, 0, 0.5),
+    0px -10px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(20px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner .gallery::before {
+  position: absolute;
+  content: "";
+  left: 0;
+  bottom: 0;
+  height: 10px;
+  width: 100%;
+  background: var(--primary);
+  filter: blur(15px);
+}
+
+.banner .gallery .carousel {
+  width: 100%;
+  height: 100%;
+}
+
+.carousel .carousel-item {
+  width: 250px;
+  cursor: pointer;
+}
+
+.carousel .carousel-item img {
+  border-radius: 10px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.carousel .carousel-item h4 {
+  text-align: center;
+  color: var(--primary);
+  font-size: 1.3em;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+/* Social Media Icons */
+.sci {
+  position: absolute;
+  top: 50%;
+  right: 100px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.sci li {
+  list-style: none;
+}
+
+.sci li a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.2em;
+  transition: 0.3s;
+}
+
+.sci li a:hover {
+  color: var(--primary);
+}
+
+/* Video Play and Pause Button */
+.banner .play,
+.banner .pause {
+  display: none;
+  position: absolute;
+  left: 70%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--primary);
+  font-size: 8em;
+  cursor: pointer;
+  z-index: 100;
+  opacity: 0.3;
+  transition: 0.3s;
+}
+
+.banner .play:hover,
+.banner .pause:hover {
+  color: #fff;
+  opacity: 1;
+}
+
+.banner .play.active {
+  display: block;
+}
+
+.banner .pause.active {
+  display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  header {
+    padding: 20px 50px;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+  }
+  header::after {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--primary);
+  }
+
+  .logo {
+    margin-top: 10px;
+  }
+
+  .nav {
+    right: 0;
+    width: 100%;
+  }
+
+  .nav.active {
+    right: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* border: none; */
+  }
+  .banner {
+    padding: 50px 30px 100px;
+  }
+  .banner .content {
+    position: relative;
+    padding: 50px 0 100px;
+  }
+
+  .banner .content h1 {
+    font-size: 5em;
+  }
+
+  .banner .content .model {
+    font-size: 2em;
+  }
+  .banner .content a {
+    /* width: 150px; */
+    padding: 10px 40px;
+  }
+  .banner .screen {
+    display: none;
+  }
+
+  .banner .gallery {
+    width: 100%;
+    left: 0;
+  }
+  .sci {
+    right: 20px;
+  }
+}
+
+    </style>
+  </head>
+  <body>
+    <!-- Header section -->
+    <header>
+      <span class="year">2026 - 2027</span>
+      <a href="/" class="logo"
+        ><img src="./images/logo.png" alt="header logo"
+      /></a>
+      <a href="#" class="menu" onclick="toggleMenu()"></a>
+    </header>
+
+    <!-- Banner -->
+    <div class="banner">
+      <ul class="nav">
+        <li><a href="#">Super Cars</a></li>
+        <li><a href="#">GT</a></li>
+        <li><a href="#">Ultimate</a></li>
+        <li><a href="#">Solus GT</a></li>
+        <li><a href="#">Legacy</a></li>
+      </ul>
+      <!-- bg-video -->
+      <div class="bg-video-list">
+        <video
+          class="bg-video mclaren-1 active"
+          src="./assets/videos/mclaren-1.mp4"
+          autoplay
+          loop
+          muted
+        ></video>
+
+        <video
+          class="bg-video mclaren-2"
+          src="./assets/videos/mclaren-2.mp4"
+          autoplay
+          loop
+          muted
+        ></video>
+
+        <video
+          class="bg-video mclaren-3"
+          src="./assets/videos/mclaren-3.mp4"
+          autoplay
+          loop
+          muted
+        ></video>
+
+        <video
+          class="bg-video mclaren-4"
+          src="./assets/videos/mclaren-4.mp4"
+          autoplay
+          loop
+          muted
+        ></video>
+
+        <video
+          class="bg-video mclaren-5"
+          src="./assets/videos/mclaren-5.mp4"
+          autoplay
+          loop
+          muted
+        ></video>
+      </div>
+
+      <div class="content">
+        <h1>McLAREN</h1>
+        <h3 class="model mclaren-1 active">765LT SPIDER</h3>
+        <h3 class="model mclaren-2" style="color: #92ff00">ARTURA</h3>
+        <h3 class="model mclaren-3" style="color: #ff0015">750S</h3>
+        <h3 class="model mclaren-4" style="color: #ff2e00">765LT</h3>
+        <h3 class="model mclaren-5" style="color: #bbc0dd">750S SPIDER</h3>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+          auctor, nisl eget ultricies tincidunt, nunc nisl aliquam nisl, eget
+          ultricies nunc nisl eget nisl.
+        </p>
+        <a href="#">Enquire</a>
+      </div>
+
+      <!-- Video Play and Pause Button -->
+      <a href="#" class="pause active" onclick="pauseVideo()">
+        <i class="bi bi-pause-circle"></i>
+      </a>
+      <a href="#" class="play" onclick="playVideo()">
+        <i class="bi bi-play-circle"></i>
+      </a>
+
+      <div class="screen">
+        <div class="shadow"></div>
+        <div>
+          <span style="--i: 0">
+            <video
+              class="trailer mclaren-1 screen-video active"
+              src="./assets/videos/mclaren-1.mp4"
+              autoplay
+              loop
+              muted
+            ></video>
+            <video
+              class="trailer mclaren-2 screen-video"
+              src="./assets/videos/mclaren-2.mp4"
+              autoplay
+              loop
+              muted
+            ></video>
+            <video
+              class="trailer mclaren-3 screen-video"
+              src="./assets/videos/mclaren-3.mp4"
+              autoplay
+              loop
+              muted
+            ></video>
+            <video
+              class="trailer mclaren-4 screen-video"
+              src="./assets/videos/mclaren-4.mp4"
+              autoplay
+              loop
+              muted
+            ></video>
+            <video
+              class="trailer mclaren-5 screen-video"
+              src="./assets/videos/mclaren-5.mp4"
+              autoplay
+              loop
+              muted
+            ></video>
+          </span>
+          <span style="--i: 1">
+            <video
+              src="./assets/videos/trailer-1.mp4"
+              class="screen-video"
+              autoplay
+              loop
+              muted
+            ></video>
+          </span>
+          <span style="--i: 2">
+            <video
+              src="./assets/videos/trailer-2.mp4"
+              class="screen-video"
+              autoplay
+              loop
+              muted
+            ></video>
+          </span>
+          <span style="--i: 3">
+            <video
+              src="./assets/videos/trailer-3.mp4"
+              class="screen-video"
+              autoplay
+              loop
+              muted
+            ></video>
+          </span>
+        </div>
+      </div>
+
+      <!-- Banner Gallery -->
+      <div class="gallery">
+        <div class="carousel">
+          <a class="carousel-item" href="#" onclick="changeVideo('mclaren-1')">
+            <img src="./images/cars/mclaren-1.jpg" alt="mclaren-1" />
+            <h4>765LT SPIDER</h4>
+          </a>
+          <a class="carousel-item" href="#" onclick="changeVideo('mclaren-2')">
+            <img src="./images/cars/mclaren-2.jpg" alt="mclaren-2" />
+            <h4 style="color: #92ff00">ARTURA</h4>
+          </a>
+          <a class="carousel-item" href="#" onclick="changeVideo('mclaren-3')">
+            <img src="./images/cars/mclaren-3.jpg" alt="mclaren-3" />
+            <h4 style="color: #ff0015">750S</h4>
+          </a>
+          <a class="carousel-item" href="#" onclick="changeVideo('mclaren-4')">
+            <img src="./images/cars/mclaren-4.jpg" alt="mclaren-4" />
+            <h4 style="color: #ff2e00">765LT</h4>
+          </a>
+          <a class="carousel-item" href="#" onclick="changeVideo('mclaren-5')">
+            <img src="./images/cars/mclaren-5.jpg" alt="mclaren-5" />
+            <h4 style="color: #bbc0dd">760S SPIDER</h4>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social Media Icons -->
+    <ul class="sci">
+      <li>
+        <a href="#"><i class="bi bi-facebook"></i></a>
+      </li>
+      <li>
+        <a href="#"><i class="bi bi-youtube"></i></a>
+      </li>
+      <li>
+        <a href="#"><i class="bi bi-instagram"></i></a>
+      </li>
+    </ul>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+      // toggle menu button
+function toggleMenu() {
+  const menu = document.querySelector(".menu");
+  menu.classList.toggle("active");
+
+  const nav = document.querySelector(".nav");
+  nav.classList.toggle("active");
+}
+
+// Carousel initialization
+document.addEventListener("DOMContentLoaded", function () {
+  var elems = document.querySelectorAll(".carousel");
+  var instances = M.Carousel.init(elems);
+});
+
+// Change the background video when click on the gallery images
+function changeVideo(name) {
+  const bgVideoList = document.querySelectorAll(".bg-video");
+  const trailers = document.querySelectorAll(".trailer");
+  const models = document.querySelectorAll(".model");
+
+  // JavaScript higher order array function forEach
+  // This is easier to do data mapping
+  bgVideoList.forEach((video) => {
+    video.classList.remove("active");
+    if (video.classList.contains(name)) {
+      video.classList.add("active");
+    }
+  });
+
+  // mapping model name change
+  models.forEach((model) => {
+    model.classList.remove("active");
+    if (model.classList.contains(name)) {
+      model.classList.add("active");
+    }
+  });
+
+  // mapping trailer video change
+  trailers.forEach((trailer) => {
+    trailer.classList.remove("active");
+    if (trailer.classList.contains(name)) {
+      trailer.classList.add("active");
+    }
+  });
+}
+
+// Change the play and pause button on click event
+function togglePlay() {
+  const play = document.querySelector(".play");
+  const pause = document.querySelector(".pause");
+  play.classList.toggle("active");
+  pause.classList.toggle("active");
+}
+
+// Video play and pause button
+function pauseVideo() {
+  const bgVideoList = document.querySelectorAll(".bg-video");
+  bgVideoList.forEach((video) => {
+    video.pause();
+  });
+
+  // a challenge for you
+  // thick how to hide the video in the screen on pause
+
+  togglePlay();
+}
+
+function playVideo() {
+  const bgVideoList = document.querySelectorAll(".bg-video");
+  bgVideoList.forEach((video) => {
+    video.play();
+  });
+
+  // thick how to show the video in the screen on play
+  // see the intro again if you don't know what i mean
+
+  togglePlay();
+}
+
+    </script>
+    <!-- <script type="text/javascript">
+      // $(document).ready(function () {
+      //   $(".carousel").carousel();
+      // });
+      document.addEventListener("DOMContentLoaded", function () {
+        var elems = document.querySelectorAll(".carousel");
+        var instances = M.Carousel.init(elems);
+      });
+    </script> -->
+  </body>
+</html>
