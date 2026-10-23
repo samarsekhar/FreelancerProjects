@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Arcs | HTML CSS JAVASCRIPT</title>
+    <style>
+        html {
+            overflow-x: hidden;
+        }
+
+        body {
+            margin: 0;
+            background: #000;
+        }
+
+        .ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: solid 0.375em;
+            border-color: red transparent transparent transparent;
+            border-radius: 50%;
+            animation: spin linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(1turn);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        const totalRings = 9;
+        let baseDiameter = 2;
+        for (let i = 0; i < totalRings; i++) {
+            const d = baseDiameter + i * 3;
+            const ring = document.createElement('div');
+            ring.className = "ring";
+            ring.style.width = `${d}em`;
+            ring.style.height = `${d}em`;
+            ring.style.margin = `-${d / 2}em 0 0 -${d / 2}em`;
+            const duration = 6.3 / (totalRings - i);
+            ring.style.animationDuration = `${duration}s`;
+            document.body.appendChild(ring);
+        }
+    </script>
+</body>
+
+</html>
