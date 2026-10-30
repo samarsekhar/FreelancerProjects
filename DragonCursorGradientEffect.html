@@ -1,0 +1,319 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dragon Cursor Gradient Effect</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      cursor: none;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      color: white;
+      background:
+        radial-gradient(ellipse at 50% 50%, #19103a 0%, #080817 55%, #03030a 100%);
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .content {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tag {
+      padding: 9px 18px;
+      border: 1px solid #a855f7;
+      border-radius: 30px;
+      color: #d8b4fe;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      box-shadow: 0 0 25px #9333ea30;
+    }
+
+    h1 {
+      margin: 28px 0 18px;
+      font-size: clamp(42px, 8vw, 95px);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -4px;
+      background: linear-gradient(
+        90deg,
+        #00f5ff,
+        #a855f7,
+        #ff35c8,
+        #ffb347
+      );
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradientMove 5s linear infinite;
+    }
+
+    p {
+      max-width: 560px;
+      color: #b8b5d1;
+      line-height: 1.8;
+      font-size: 16px;
+    }
+
+    .hint {
+      margin-top: 38px;
+      color: #a78bfa;
+      font-size: 12px;
+      letter-spacing: 3px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes gradientMove {
+      to { background-position: 300% 0; }
+    }
+
+    @keyframes pulse {
+      50% { opacity: 0.4; }
+    }
+
+    @media (pointer: coarse) {
+      * { cursor: auto; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hint, h1 { animation: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="dragon"></canvas>
+
+  <main class="content">
+    <!-- <span class="tag">Creative Interaction</span> -->
+
+    <h1>DRAGON<br />CURSOR</h1>
+
+    <!-- <p>
+      A magical dragon trail powered by HTML, CSS and JavaScript.
+      Move your mouse to unleash a glowing neon gradient across
+      the screen.
+    </p>
+
+    <div class="hint">✦ MOVE YOUR MOUSE TO AWAKEN THE DRAGON ✦</div> -->
+  </main>
+
+  <script>
+    const canvas = document.getElementById("dragon");
+    const ctx = canvas.getContext("2d");
+
+    let width, height, dpr;
+    let hue = 180;
+    let frame = 0;
+
+    const mouse = { x: -100, y: -100 };
+    const points = [];
+    const particles = [];
+
+    const POINT_COUNT = 35;
+    const PARTICLE_COUNT = 2;
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    window.addEventListener("pointermove", (event) => {
+      mouse.x = event.clientX;
+      mouse.y = event.clientY;
+
+      // Add glowing particles around the dragon.
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push({
+          x: mouse.x + (Math.random() - 0.5) * 18,
+          y: mouse.y + (Math.random() - 0.5) * 18,
+          vx: (Math.random() - 0.5) * 3,
+          vy: (Math.random() - 0.5) * 3,
+          size: Math.random() * 3 + 1,
+          life: 1,
+          hue: hue + Math.random() * 70
+        });
+      }
+    });
+
+    function drawDragon() {
+      // Smoothly follow the mouse with connected body segments.
+      points.unshift({ x: mouse.x, y: mouse.y });
+
+      if (points.length > POINT_COUNT) points.pop();
+
+      if (points.length < 2) return;
+
+      ctx.save();
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+
+      // Main neon dragon body.
+      for (let i = points.length - 1; i > 0; i--) {
+        const p = points[i];
+        const next = points[i - 1];
+
+        const progress = 1 - i / points.length;
+        const lineWidth = 1 + progress * 19;
+
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(next.x, next.y);
+
+        ctx.strokeStyle = `hsla(${(hue + i * 5) % 360}, 100%, 65%, ${
+          progress * 0.9
+        })`;
+
+        ctx.lineWidth = lineWidth;
+        ctx.shadowBlur = 18;
+        ctx.shadowColor = `hsl(${(hue + i * 5) % 360}, 100%, 60%)`;
+        ctx.stroke();
+      }
+
+      // Bright inner core.
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = "#ffffff";
+      ctx.beginPath();
+
+      points.forEach((p, i) => {
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "rgba(255,255,255,0.85)";
+      ctx.stroke();
+
+      // Dragon head.
+      const head = points[0];
+      const neck = points[1] || head;
+      const angle = Math.atan2(head.y - neck.y, head.x - neck.x);
+
+      ctx.translate(head.x, head.y);
+      ctx.rotate(angle);
+
+      const gradient = ctx.createLinearGradient(-12, -12, 14, 12);
+      gradient.addColorStop(0, "#00f5ff");
+      gradient.addColorStop(0.5, "#d946ef");
+      gradient.addColorStop(1, "#ffb347");
+
+      ctx.fillStyle = gradient;
+      ctx.shadowBlur = 24;
+      ctx.shadowColor = "#d946ef";
+
+      // Head shape.
+      ctx.beginPath();
+      ctx.moveTo(15, 0);
+      ctx.lineTo(5, -8);
+      ctx.lineTo(-7, -6);
+      ctx.lineTo(-12, 0);
+      ctx.lineTo(-7, 6);
+      ctx.lineTo(5, 8);
+      ctx.closePath();
+      ctx.fill();
+
+      // Two dragon horns.
+      ctx.beginPath();
+      ctx.moveTo(-4, -5);
+      ctx.lineTo(-12, -16);
+      ctx.lineTo(3, -8);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(-4, 5);
+      ctx.lineTo(-12, 16);
+      ctx.lineTo(3, 8);
+      ctx.fill();
+
+      // Glowing eye.
+      ctx.beginPath();
+      ctx.arc(7, -2, 2, 0, Math.PI * 2);
+      ctx.fillStyle = "#ffffff";
+      ctx.shadowColor = "#ffffff";
+      ctx.shadowBlur = 10;
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function drawParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.018;
+        p.vx *= 0.99;
+        p.vy *= 0.99;
+
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+
+        ctx.fillStyle = `hsla(${p.hue % 360}, 100%, 70%, ${p.life})`;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.fill();
+      }
+    }
+
+    function animate() {
+      // Clear the canvas for a smooth, continuous trail.
+      ctx.clearRect(0, 0, width, height);
+
+      hue = (hue + 0.8) % 360;
+      frame++;
+
+      drawDragon();
+      drawParticles();
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
