@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SAMARSEKHAR - Cinematic YouTube Intro</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        height: 100vh;
+        overflow: hidden;
+        background: #050510;
+        font-family: Arial, sans-serif;
+        color: white;
+      }
+
+      .scene {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        visibility: hidden;
+        opacity: 0;
+        background: radial-gradient(
+          circle,
+          #17134a 0%,
+          #09091b 45%,
+          #020208 100%
+        );
+      }
+
+      .scene.active {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      /* Background particles */
+
+      .particles {
+        position: absolute;
+        inset: 0;
+        background-image:
+          radial-gradient(#fff 1px, transparent 1px),
+          radial-gradient(#00eaff 1px, transparent 1px);
+        background-size:
+          70px 70px,
+          110px 110px;
+        animation: particles 20s linear infinite;
+        opacity: 0.3;
+      }
+
+      @keyframes particles {
+        to {
+          background-position:
+            300px 300px,
+            -200px 200px;
+        }
+      }
+
+      /* Glowing circles */
+
+      .glow {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        border: 2px solid #873cff;
+        border-radius: 50%;
+        box-shadow:
+          0 0 30px #793bff,
+          inset 0 0 40px #793bff;
+        animation:
+          rotate 8s linear infinite,
+          expand 3s ease-in-out infinite alternate;
+      }
+
+      .glow::after {
+        content: "";
+        position: absolute;
+        inset: 20%;
+        border: 2px solid #00eaff;
+        border-radius: 50%;
+        box-shadow: 0 0 35px #00eaff;
+        animation: rotate 5s linear infinite reverse;
+      }
+
+      @keyframes rotate {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes expand {
+        from {
+          scale: 0.8;
+        }
+        to {
+          scale: 1.2;
+        }
+      }
+
+      /* Scanning effect */
+
+      .scan {
+        position: absolute;
+        width: 100%;
+        height: 100px;
+        background: linear-gradient(transparent, #00eaff22, transparent);
+        animation: scan 4s linear infinite;
+        pointer-events: none;
+      }
+
+      @keyframes scan {
+        from {
+          top: -100px;
+        }
+        to {
+          top: 110%;
+        }
+      }
+
+      /* Scene 1 */
+
+      .logo {
+        position: relative;
+        z-index: 2;
+        font-size: clamp(55px, 12vw, 110px);
+        font-weight: 900;
+        letter-spacing: 10px;
+        background: linear-gradient(90deg, #fff, #00eaff, #a855ff, #fff);
+        background-size: 300%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation:
+          reveal 2s ease both,
+          shine 4s linear infinite;
+        text-shadow: 0 0 35px #773cff66;
+      }
+
+      .subtitle {
+        position: relative;
+        z-index: 2;
+        margin-top: 25px;
+        font-size: clamp(12px, 3vw, 20px);
+        letter-spacing: 8px;
+        color: #b8b8ff;
+        opacity: 0;
+        animation: fadeIn 1s ease 1.8s forwards;
+      }
+
+      .line {
+        position: absolute;
+        height: 2px;
+        width: 0;
+        background: #00eaff;
+        box-shadow: 0 0 20px #00eaff;
+        animation: line 1.5s ease 1s forwards;
+      }
+
+      @keyframes reveal {
+        0% {
+          opacity: 0;
+          transform: scale(2) translateY(50px);
+          filter: blur(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+          filter: blur(0);
+        }
+      }
+
+      @keyframes shine {
+        to {
+          background-position: 300%;
+        }
+      }
+
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes line {
+        to {
+          width: 80%;
+        }
+      }
+
+      /* Scene 2 */
+
+      .welcome {
+        position: relative;
+        z-index: 2;
+        font-size: clamp(35px, 8vw, 85px);
+        font-weight: 900;
+        letter-spacing: 5px;
+        text-shadow:
+          0 0 15px #00eaff,
+          0 0 50px #803cff;
+        animation: welcome 2s ease both;
+      }
+
+      .welcome-text {
+        position: relative;
+        z-index: 2;
+        margin-top: 25px;
+        color: #00eaff;
+        letter-spacing: 5px;
+        font-size: clamp(12px, 3vw, 20px);
+        animation: slideUp 1.5s 0.7s both;
+      }
+
+      @keyframes welcome {
+        0% {
+          opacity: 0;
+          transform: scale(0.3) rotate(-8deg);
+          filter: blur(20px);
+        }
+        70% {
+          transform: scale(1.1);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1);
+          filter: blur(0);
+        }
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(60px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Scene 3 */
+
+      .subscribe-title {
+        position: relative;
+        z-index: 2;
+        font-size: clamp(35px, 7vw, 75px);
+        font-weight: 900;
+        text-align: center;
+        color: white;
+        text-shadow:
+          0 0 15px red,
+          0 0 35px #ff003c;
+        animation: welcome 1.5s ease both;
+      }
+
+      .profile {
+        position: relative;
+        z-index: 2;
+        margin: 25px 0;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 15px 25px;
+        border: 1px solid #ffffff44;
+        background: #ffffff12;
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        animation: slideUp 1.5s 0.5s both;
+      }
+
+      .avatar {
+        width: 75px;
+        height: 75px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #00eaff, #9b42ff);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        font-weight: bold;
+        border: 3px solid white;
+        box-shadow: 0 0 25px #00eaff;
+      }
+
+      .profile-info h2 {
+        font-size: 22px;
+        margin-bottom: 8px;
+      }
+
+      .profile-info p {
+        color: #aaa;
+        font-size: 13px;
+      }
+
+      .buttons {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        animation: slideUp 1.5s 1s both;
+      }
+
+      .btn {
+        text-decoration: none;
+        border: none;
+        padding: 15px 25px;
+        border-radius: 50px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .subscribe {
+        background: #ff003c;
+        color: white;
+        box-shadow: 0 0 20px #ff003c;
+        animation: bounce 1.5s infinite alternate;
+      }
+
+      .subscribe:hover {
+        background: white;
+        color: #ff003c;
+        transform: scale(1.1);
+      }
+
+      .channel {
+        background: transparent;
+        color: #00eaff;
+        border: 2px solid #00eaff;
+      }
+
+      .channel:hover {
+        background: #00eaff;
+        color: black;
+      }
+
+      @keyframes bounce {
+        to {
+          transform: translateY(-7px);
+        }
+      }
+
+      .thanks {
+        position: relative;
+        z-index: 2;
+        margin-top: 25px;
+        font-size: 14px;
+        letter-spacing: 4px;
+        color: #b9b9ff;
+        animation: slideUp 1.5s 1.3s both;
+      }
+
+      /* Progress bar */
+
+      .progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 4px;
+        width: 0;
+        background: #00eaff;
+        box-shadow: 0 0 15px #00eaff;
+        z-index: 10;
+      }
+
+      /* Responsive */
+
+      @media (max-width: 500px) {
+        .glow {
+          width: 230px;
+          height: 230px;
+        }
+
+        .profile {
+          padding: 12px;
+          gap: 10px;
+        }
+
+        .avatar {
+          width: 55px;
+          height: 55px;
+        }
+
+        .profile-info h2 {
+          font-size: 16px;
+        }
+
+        .btn {
+          padding: 12px 17px;
+          font-size: 11px;
+        }
+
+        .subtitle {
+          letter-spacing: 4px;
+          text-align: center;
+        }
+
+        .thanks {
+          font-size: 10px;
+          letter-spacing: 2px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- SCENE 1: LOGO INTRO -->
+
+    <section class="scene active" id="scene1">
+      <div class="particles"></div>
+      <div class="glow"></div>
+      <div class="scan"></div>
+      <div class="line"></div>
+
+      <h1 class="logo">SAMARSEKHAR</h1>
+      <p class="subtitle">CREATIVE • TECHNOLOGY • INNOVATION</p>
+    </section>
+
+    <!-- SCENE 2: WELCOME -->
+
+    <section class="scene" id="scene2">
+      <div class="particles"></div>
+      <div class="glow"></div>
+      <div class="scan"></div>
+
+      <h1 class="welcome">WELCOME BACK!</h1>
+      <p class="welcome-text">THANK YOU FOR WATCHING ❤️</p>
+    </section>
+
+    <!-- SCENE 3: SUBSCRIBE -->
+
+    <section class="scene" id="scene3">
+      <div class="particles"></div>
+      <div class="glow"></div>
+      <div class="scan"></div>
+
+      <h1 class="subscribe-title">DO SUBSCRIBE!</h1>
+
+      <div class="profile">
+        <div class="avatar">S</div>
+
+        <div class="profile-info">
+          <h2>SAMARSEKHAR</h2>
+          <p>Web Development • Coding • Projects</p>
+          <p>New Videos Every Week</p>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <a
+          class="btn subscribe"
+          href="https://www.youtube.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          ▶ SUBSCRIBE
+        </a>
+
+        <a
+          class="btn channel"
+          href="https://www.youtube.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          CHECK MY CHANNEL ↗
+        </a>
+      </div>
+
+      <p class="thanks">LIKE • SHARE • COMMENT • SUBSCRIBE</p>
+    </section>
+
+    <div class="progress" id="progress"></div>
+
+    <script>
+      let timer;
+      let progressTimer;
+      let currentScene = 0;
+
+      const scenes = [
+        document.getElementById("scene1"),
+        document.getElementById("scene2"),
+        document.getElementById("scene3"),
+      ];
+
+      const progress = document.getElementById("progress");
+
+      function showScene(index) {
+        scenes.forEach((scene) => {
+          scene.classList.remove("active");
+        });
+
+        const scene = scenes[index];
+
+        // Restart CSS animations
+        void scene.offsetWidth;
+
+        scene.classList.add("active");
+        currentScene = index;
+      }
+
+      function startIntro() {
+        clearTimeout(timer);
+        clearInterval(progressTimer);
+
+        progress.style.transition = "none";
+        progress.style.width = "0%";
+
+        showScene(0);
+
+        const duration = 15000;
+        const start = Date.now();
+
+        progressTimer = setInterval(() => {
+          const elapsed = Date.now() - start;
+          const percent = Math.min((elapsed / duration) * 100, 100);
+
+          progress.style.width = percent + "%";
+        }, 30);
+
+        timer = setTimeout(() => {
+          clearInterval(progressTimer);
+
+          showScene(1);
+
+          const secondStart = Date.now();
+
+          progressTimer = setInterval(() => {
+            const elapsed = Date.now() - secondStart;
+            const percent = Math.min((elapsed / duration) * 100, 100);
+
+            progress.style.width = percent + "%";
+          }, 30);
+
+          timer = setTimeout(() => {
+            clearInterval(progressTimer);
+
+            showScene(2);
+            progress.style.width = "100%";
+          }, duration);
+        }, duration);
+      }
+
+      // Start cinematic intro automatically
+      startIntro();
+    </script>
+  </body>
+</html>
