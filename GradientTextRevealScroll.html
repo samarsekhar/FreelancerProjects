@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gradient Text Reveal on Scroll</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #111111;
+        color: white;
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Scroll animation section */
+      .reveal-section {
+        min-height: 200vh;
+        position: relative;
+      }
+
+      .reveal-container {
+        position: sticky;
+        top: 0;
+        min-height: 100vh;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        padding: 30px;
+      }
+
+      /* Main heading */
+      .reveal-heading {
+        max-width: 1050px;
+        width: 100%;
+
+        text-align: center;
+        font-size: clamp(28px, 5.2vw, 64px);
+        font-weight: 600;
+        line-height: 1.55;
+        letter-spacing: -2.5px;
+      }
+
+      /* Individual text lines */
+      .line {
+        display: block;
+
+        color: transparent;
+
+        background-image: linear-gradient(
+          90deg,
+          #ffffff 0%,
+          #ffffff 42%,
+          #ff3cac 47%,
+          #ff9a35 53%,
+          #a3e635 59%,
+          #38363b 66%,
+          #38363b 100%
+        );
+
+        background-size: 250% 100%;
+        background-position: 100% 0%;
+
+        background-clip: text;
+        -webkit-background-clip: text;
+
+        will-change: background-position;
+      }
+
+      /* Next section */
+      .next-section {
+        min-height: 100vh;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        text-align: center;
+        padding: 30px;
+        gap: 20px;
+      }
+
+      .next-section h2 {
+        font-size: clamp(35px, 6vw, 75px);
+
+        background: linear-gradient(90deg, #ff3cac, #ff9a35, #a3e635);
+
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+
+      .next-section p {
+        color: #888;
+        font-size: 16px;
+      }
+
+      /* Responsive */
+      @media (max-width: 600px) {
+        .reveal-container {
+          padding: 20px;
+        }
+
+        .reveal-heading {
+          font-size: 30px;
+          line-height: 1.5;
+          letter-spacing: -1.2px;
+        }
+
+        .line {
+          margin-bottom: 5px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section class="reveal-section" id="revealSection">
+      <div class="reveal-container">
+        <h1 class="reveal-heading">
+          <span class="line">A scroll-triggered text reveal</span>
+          <span class="line">with a bold gradient sweep that</span>
+          <span class="line">cuts through each line and</span>
+          <span class="line">delivers instant wow.</span>
+        </h1>
+      </div>
+    </section>
+
+    <section class="next-section">
+      <h2>Keep Exploring ✨</h2>
+      <p>Beautiful animations make websites memorable.</p>
+    </section>
+
+    <script>
+      const section = document.querySelector("#revealSection");
+      const lines = document.querySelectorAll(".line");
+
+      function updateTextReveal() {
+        const rect = section.getBoundingClientRect();
+
+        // Calculate total scroll distance
+        const scrollDistance = section.offsetHeight - window.innerHeight;
+
+        // Calculate overall scroll progress
+        let progress = -rect.top / scrollDistance;
+
+        progress = Math.max(0, Math.min(1, progress));
+
+        // Animate each line individually
+        lines.forEach((line, index) => {
+          // Stagger each line's reveal
+          const delay = index * 0.13;
+
+          const lineProgress = Math.max(
+            0,
+            Math.min(1, (progress - delay) / 0.62),
+          );
+
+          // Move gradient from right to left
+          const position = 100 - lineProgress * 100;
+
+          line.style.backgroundPosition = `${position}% 0%`;
+        });
+      }
+
+      // Scroll event
+      window.addEventListener("scroll", updateTextReveal, { passive: true });
+
+      // Initial render
+      window.addEventListener("load", updateTextReveal);
+      window.addEventListener("resize", updateTextReveal);
+
+      updateTextReveal();
+    </script>
+  </body>
+</html>
